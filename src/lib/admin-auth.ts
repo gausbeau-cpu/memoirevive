@@ -9,7 +9,7 @@ const SESSION_SECRET =
   process.env.ADMIN_SESSION_SECRET || "mv_session_secret_2026_ouagadougou_burkina_key";
 
 export const DEFAULT_ADMIN_EMAIL =
-  process.env.ADMIN_EMAIL || "admin@memoirevive.bf";
+  process.env.ADMIN_EMAIL || "wendclasss@gmail.com";
 export const DEFAULT_ADMIN_PASSWORD =
   process.env.ADMIN_PASSWORD || "MemoireVive2026!Securise";
 

@@ -26,7 +26,6 @@ import {
   getOfferById,
 } from "@/content/offers";
 import { SITE_CONTENT, WHATSAPP_NUMBER } from "@/content/site";
-import { compressImage } from "@/lib/compress-image";
 import { formatBurkinaWhatsAppPhone } from "@/lib/utils";
 
 interface OrderModalProps {
@@ -185,30 +184,17 @@ export default function OrderModal({
     adresseDetails,
   ]);
 
-  if (!isOpen) return null;
-
-  // Gestion de la sélection de photo avec compression côté client
-  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Gestion de la sélection de photo originale (pleine résolution conservée pour impression PVC)
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setValidationError(null);
     setPhotoOriginalSize(file.size);
-    setIsCompressing(true);
-
-    try {
-      // Compression instantanée dans le navigateur
-      const compressed = await compressImage(file);
-      setPhotoFile(compressed);
-      const previewUrl = URL.createObjectURL(compressed);
-      setPhotoPreview(previewUrl);
-    } catch (err) {
-      console.error("Erreur compression image:", err);
-      setPhotoFile(file);
-      setPhotoPreview(URL.createObjectURL(file));
-    } finally {
-      setIsCompressing(false);
-    }
+    setIsCompressing(false);
+    setPhotoFile(file);
+    const previewUrl = URL.createObjectURL(file);
+    setPhotoPreview(previewUrl);
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -378,29 +364,48 @@ export default function OrderModal({
 
           {/* ÉTAT 2 : Erreur */}
           {modalState === "error" && (
-            <div className="py-10 px-4 text-center flex flex-col items-center justify-center space-y-4">
+            <div className="py-8 px-4 text-center flex flex-col items-center justify-center space-y-4">
               <div className="w-14 h-14 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center">
                 <AlertCircle className="w-7 h-7" />
               </div>
               <h3 className="font-heading text-xl font-bold text-brand-charcoal">
                 {content.error.title}
               </h3>
-              <p className="text-sm text-stone-600 max-w-sm leading-relaxed">
+              <p className="text-xs sm:text-sm text-stone-600 max-w-sm leading-relaxed">
                 {serverError || content.error.message}
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 pt-3 w-full max-w-xs">
+
+              {/* Bouton de secours direct WhatsApp : aucune commande n'est perdue */}
+              <div className="w-full max-w-sm p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-left space-y-2.5 shadow-sm">
+                <p className="text-xs font-semibold text-emerald-950">
+                  📱 Passe ta commande directement à l’équipe sur WhatsApp :
+                </p>
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                    `Bonjour Mémoire Vive, je souhaite commander mon tableau d’anniversaire :\n- Format : ${selectedOffer.name} (${selectedOffer.format} - ${formatOfferPrice(selectedOffer.price)})\n- Nom : ${nom.trim()}\n- Quartier : ${quartier.trim()}\n- Message sur la photo : ${texteAEcrire.trim() || "À me proposer"}\n- Téléphone : ${telephone.trim()}\n\n(Je vous joins ma photo originale)`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition active:scale-[0.98]"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>Envoyer ma commande sur WhatsApp</span>
+                </a>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2.5 pt-1 w-full max-w-xs">
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="flex-1 py-3 px-4 rounded-xl bg-brand-purple text-white font-semibold text-sm hover:bg-brand-purple/90 transition shadow-sm flex items-center justify-center gap-2"
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-brand-purple text-white font-semibold text-xs hover:bg-brand-purple/90 transition shadow-sm flex items-center justify-center gap-2"
                 >
-                  <RefreshCw className="w-4 h-4" />
+                  <RefreshCw className="w-3.5 h-3.5" />
                   {content.error.retryButton}
                 </button>
                 <button
                   type="button"
                   onClick={() => setModalState("form")}
-                  className="flex-1 py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-sm transition"
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs transition"
                 >
                   {content.error.reviewButton}
                 </button>
@@ -544,10 +549,12 @@ export default function OrderModal({
                         </span>
                         <p className="text-[11px] text-stone-500 truncate mt-0.5">
                           {photoFile?.name}
-                          {photoOriginalSize && (
-                            <span className="ml-1 text-stone-400">
-                              (optimisée à{" "}
-                              {Math.round((photoFile?.size || 0) / 1024)} Ko)
+                          {photoFile?.size && (
+                            <span className="ml-1 text-emerald-700 font-medium">
+                              · {photoFile.size >= 1024 * 1024
+                                ? `${(photoFile.size / (1024 * 1024)).toFixed(1)} Mo`
+                                : `${Math.round(photoFile.size / 1024)} Ko`}{" "}
+                              (Qualité originale)
                             </span>
                           )}
                         </p>

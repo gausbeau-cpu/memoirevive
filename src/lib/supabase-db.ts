@@ -233,7 +233,7 @@ export async function submitOrder(
       console.error("Erreur INSERT commande:", insertError);
       return {
         success: false,
-        error: "Erreur lors de l’enregistrement. Réessaie.",
+        error: `Erreur d’enregistrement : ${insertError?.message || "Erreur base de données"}`,
       };
     }
 
@@ -246,11 +246,12 @@ export async function submitOrder(
     });
 
     return { success: true, orderId: newOrder.id };
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("Erreur submitOrder:", err);
+    const msg = err instanceof Error ? err.message : "Erreur de connexion";
     return {
       success: false,
-      error: "Erreur réseau. Vérifie ta connexion et réessaie.",
+      error: `Erreur serveur : ${msg}`,
     };
   }
 }

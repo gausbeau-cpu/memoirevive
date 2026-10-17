@@ -6,6 +6,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { submitOrder } from "@/lib/supabase-db";
+import { isValidOfferId } from "@/content/offers";
+import { formatBurkinaWhatsAppPhone } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,27 +24,32 @@ export async function POST(request: NextRequest) {
 
     const forfaitId = (formData.get("forfait") as string)?.trim();
     const clientNom = (formData.get("nom") as string)?.trim();
-    const clientTelephone = (formData.get("telephone") as string)?.trim();
+    const rawTelephone = (formData.get("telephone") as string)?.trim();
     const clientQuartier = (formData.get("quartier") as string)?.trim();
     const clientAdresseDetails =
       (formData.get("adresseDetails") as string)?.trim() || undefined;
     const occasionNote =
       (formData.get("occasionNote") as string)?.trim() || undefined;
+    const texteAEcrireRaw =
+      (formData.get("texteAEcrire") as string)?.trim() || undefined;
+    const laisserProposerTexte =
+      formData.get("laisserProposerTexte") === "true";
+    const echeanceRaw = (formData.get("echeance") as string)?.trim();
     const photoFile = formData.get("photo") as File | null;
     const photoExternalUrl =
-      (formData.get("photoUrl") as string)?.trim() || null;
+      (formData.get("photoUrl") as string)?.trim() || undefined;
 
     // Validation basique
-    if (!forfaitId || !clientNom || !clientTelephone || !clientQuartier) {
+    if (!forfaitId || !clientNom || !rawTelephone || !clientQuartier) {
       return NextResponse.json(
-        { error: "Champs obligatoires manquants (forfait, nom, téléphone, quartier)." },
+        { error: "Champs obligatoires manquants (format, nom, téléphone, quartier)." },
         { status: 400 }
       );
     }
 
-    if (!["souvenir", "memoire", "heritage"].includes(forfaitId)) {
+    if (!isValidOfferId(forfaitId)) {
       return NextResponse.json(
-        { error: "Forfait invalide." },
+        { error: "Format invalide. Choisis l'un des formats proposés." },
         { status: 400 }
       );
     }
@@ -62,14 +69,23 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
-      const MAX_SIZE = 10 * 1024 * 1024; // 10 Mo
+      const MAX_SIZE = 15 * 1024 * 1024; // 15 Mo
       if (photoFile.size > MAX_SIZE) {
         return NextResponse.json(
-          { error: "La photo ne doit pas dépasser 10 Mo." },
+          { error: "La photo ne doit pas dépasser 15 Mo." },
           { status: 400 }
         );
       }
     }
+
+    const clientTelephone = formatBurkinaWhatsAppPhone(rawTelephone);
+    const texteAEcrire = texteAEcrireRaw ? texteAEcrireRaw.slice(0, 100) : undefined;
+    const echeance =
+      echeanceRaw === "cette_semaine" ||
+      echeanceRaw === "ce_mois" ||
+      echeanceRaw === "plus_tard"
+        ? echeanceRaw
+        : null;
 
     const result = await submitOrder({
       photoFile,
@@ -79,6 +95,9 @@ export async function POST(request: NextRequest) {
       clientTelephone,
       clientQuartier,
       clientAdresseDetails,
+      texteAEcrire,
+      laisserProposerTexte,
+      echeance,
       occasionNote,
     });
 

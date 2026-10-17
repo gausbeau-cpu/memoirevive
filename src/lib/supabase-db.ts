@@ -6,30 +6,7 @@
 
 import { getSupabaseAdmin } from "./supabase";
 import type { AdminOrder, OrderStatus, StatusHistoryItem } from "./admin-db";
-
-// -------------------------------------------------------------------------
-// Constantes forfaits (source de vérité côté serveur)
-// -------------------------------------------------------------------------
-const FORFAIT_DETAILS: Record<
-  string,
-  { nom: string; prix: number; format: string }
-> = {
-  souvenir: {
-    nom: "Souvenir",
-    prix: 10000,
-    format: "Cadre simple · 13 x 18 cm",
-  },
-  memoire: {
-    nom: "Mémoire",
-    prix: 20000,
-    format: "Cadre Bois Noble · 20 x 30 cm",
-  },
-  heritage: {
-    nom: "Héritage",
-    prix: 35000,
-    format: "Grand Cadre Galerie · 30 x 40 cm",
-  },
-};
+import { getOfferById, OfferId } from "@/content/offers";
 
 // -------------------------------------------------------------------------
 // Conversion ligne DB → objet AdminOrder
@@ -50,13 +27,18 @@ function dbRowToAdminOrder(
     clientAdresseDetails: (row.client_adresse_details ?? undefined) as
       | string
       | undefined,
-    forfaitId: (row.forfait_id ?? "memoire") as
-      | "souvenir"
-      | "memoire"
-      | "heritage",
+    forfaitId: (row.forfait_id ?? "format_40x60") as OfferId,
     forfaitNom: (row.forfait_nom ?? "") as string,
     forfaitPrix: (row.forfait_prix ?? 0) as number,
     forfaitFormat: (row.forfait_format ?? "") as string,
+    texteAEcrire: (row.texte_a_ecrire ?? undefined) as string | undefined,
+    laisserProposerTexte: Boolean(row.laisser_proposer_texte),
+    echeance: (row.echeance ?? undefined) as
+      | "cette_semaine"
+      | "ce_mois"
+      | "plus_tard"
+      | null
+      | undefined,
     occasionNote: (row.occasion_note ?? undefined) as string | undefined,
     photoOriginaleUrl: (row.photo_originale_url ?? "") as string,
     photoApercuUrl: (row.photo_apercu_url ?? undefined) as string | undefined,
@@ -85,7 +67,7 @@ async function addSignedUrlsToOrders(
   const admin = getSupabaseAdmin();
 
   const isStoragePath = (url: string | undefined): url is string =>
-    !!url && !url.startsWith("http");
+    Boolean(url && !url.startsWith("http"));
 
   const photoPaths = orders
     .map((o) => o.photoOriginaleUrl)
@@ -108,31 +90,29 @@ async function addSignedUrlsToOrders(
   ]);
 
   const photoMap = new Map(
-    (photoResult.data || [])
-      .filter((item) => item.signedUrl)
-      .map((item) => [item.path, item.signedUrl])
+    (photoResult.data || []).map((item) => [item.path, item.signedUrl])
   );
   const apercuMap = new Map(
-    (apercuResult.data || [])
-      .filter((item) => item.signedUrl)
-      .map((item) => [item.path, item.signedUrl])
+    (apercuResult.data || []).map((item) => [item.path, item.signedUrl])
   );
 
-  return orders.map((order) => ({
-    ...order,
-    photoOriginaleUrl: isStoragePath(order.photoOriginaleUrl)
-      ? photoMap.get(order.photoOriginaleUrl) || order.photoOriginaleUrl
-      : order.photoOriginaleUrl,
-    photoApercuUrl:
-      order.photoApercuUrl && isStoragePath(order.photoApercuUrl)
-        ? apercuMap.get(order.photoApercuUrl) || order.photoApercuUrl
-        : order.photoApercuUrl,
+  return orders.map((o) => ({
+    ...o,
+    photoOriginaleUrl:
+      (isStoragePath(o.photoOriginaleUrl)
+        ? photoMap.get(o.photoOriginaleUrl)
+        : null) || o.photoOriginaleUrl,
+    photoApercuUrl: o.photoApercuUrl
+      ? (isStoragePath(o.photoApercuUrl)
+          ? apercuMap.get(o.photoApercuUrl)
+          : null) || o.photoApercuUrl
+      : undefined,
   }));
 }
 
 // -------------------------------------------------------------------------
 // Upload d'un fichier dans Supabase Storage
-// Retourne le path (chemin dans le bucket, stocké en DB)
+// Retourne le path relatif (stocké en DB).
 // -------------------------------------------------------------------------
 export async function uploadToStorage(
   file: File | Blob,
@@ -140,14 +120,26 @@ export async function uploadToStorage(
   filename: string
 ): Promise<string> {
   const admin = getSupabaseAdmin();
+
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
   const contentType =
-    file instanceof File ? file.type : "image/jpeg";
+    file instanceof File ? file.type : "application/octet-stream";
 
   const { data, error } = await admin.storage
     .from(bucket)
-    .upload(filename, file, { contentType, upsert: false });
+    .upload(filename, buffer, {
+      contentType,
+      upsert: true,
+    });
 
-  if (error) throw new Error(`Storage upload échoué : ${error.message}`);
+  if (error || !data) {
+    console.error(`Erreur upload Storage (${bucket}/${filename}):`, error);
+    throw new Error(
+      `Impossible de sauvegarder le fichier dans le stockage (${error?.message || "erreur inconnue"}).`
+    );
+  }
+
   return data.path;
 }
 
@@ -155,33 +147,49 @@ export async function uploadToStorage(
 // Fonctions publiques (formulaire de commande)
 // =========================================================================
 
-/**
- * Soumet une nouvelle commande depuis le formulaire public.
- * Upload la photo, insère en DB, insère l'historique initial.
- */
-export async function submitOrder(params: {
-  photoFile: File | null;
-  photoExternalUrl: string | null;
+export interface SubmitOrderParams {
+  photoFile?: File | Blob | null;
+  photoExternalUrl?: string;
   forfaitId: string;
   clientNom: string;
   clientTelephone: string;
   clientQuartier: string;
   clientAdresseDetails?: string;
+  texteAEcrire?: string;
+  laisserProposerTexte?: boolean;
+  echeance?: "cette_semaine" | "ce_mois" | "plus_tard" | null;
   occasionNote?: string;
-}): Promise<{ success: boolean; orderId?: string; error?: string }> {
-  const admin = getSupabaseAdmin();
+}
 
+/**
+ * Crée une nouvelle commande dans Supabase.
+ * 1. Valide le format contre offers.ts et fixe le prix côté serveur
+ * 2. Upload la photo originale dans le bucket privé photos-commandes
+ * 3. Insère la ligne dans la table commandes
+ * 4. Insère la première entrée dans statuts_historique
+ */
+export async function submitOrder(
+  params: SubmitOrderParams
+): Promise<{ success: boolean; orderId?: string; error?: string }> {
   try {
-    // 1. Valider le forfait
-    const forfait = FORFAIT_DETAILS[params.forfaitId];
-    if (!forfait) {
-      return { success: false, error: "Forfait invalide." };
+    const admin = getSupabaseAdmin();
+
+    // 1. Validation stricte du forfait côté serveur
+    const offer = getOfferById(params.forfaitId);
+    if (!offer) {
+      return {
+        success: false,
+        error: `Format invalide (${params.forfaitId}). Choisis parmi les formats proposés.`,
+      };
     }
 
     // 2. Gérer la photo
     let photoUrl = "";
     if (params.photoFile) {
-      const ext = params.photoFile.name.split(".").pop() || "jpg";
+      const ext =
+        params.photoFile instanceof File
+          ? params.photoFile.name.split(".").pop() || "jpg"
+          : "jpg";
       const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
       photoUrl = await uploadToStorage(
         params.photoFile,
@@ -189,13 +197,17 @@ export async function submitOrder(params: {
         filename
       );
     } else if (params.photoExternalUrl) {
-      // Photo externe (ex: Unsplash) — stockée telle quelle
       photoUrl = params.photoExternalUrl;
     } else {
       return { success: false, error: "Aucune photo fournie." };
     }
 
-    // 3. Insérer la commande
+    // Limiter le texte à 100 caractères maximum
+    const cleanTexte = params.texteAEcrire
+      ? params.texteAEcrire.trim().slice(0, 100)
+      : null;
+
+    // 3. Insérer la commande avec prix fixé côté serveur
     const { data: newOrder, error: insertError } = await admin
       .from("commandes")
       .insert({
@@ -203,10 +215,13 @@ export async function submitOrder(params: {
         client_telephone: params.clientTelephone.trim(),
         client_quartier: params.clientQuartier.trim(),
         client_adresse_details: params.clientAdresseDetails?.trim() || null,
-        forfait_id: params.forfaitId,
-        forfait_nom: forfait.nom,
-        forfait_prix: forfait.prix,
-        forfait_format: forfait.format,
+        forfait_id: offer.id,
+        forfait_nom: offer.name,
+        forfait_prix: offer.price,
+        forfait_format: offer.format,
+        texte_a_ecrire: cleanTexte,
+        laisser_proposer_texte: Boolean(params.laisserProposerTexte),
+        echeance: params.echeance || null,
         occasion_note: params.occasionNote?.trim() || null,
         photo_originale_url: photoUrl,
         statut: "nouvelle",
@@ -218,7 +233,7 @@ export async function submitOrder(params: {
       console.error("Erreur INSERT commande:", insertError);
       return {
         success: false,
-        error: "Erreur lors de l'enregistrement. Veuillez réessayer.",
+        error: "Erreur lors de l’enregistrement. Réessaie.",
       };
     }
 
@@ -235,7 +250,7 @@ export async function submitOrder(params: {
     console.error("Erreur submitOrder:", err);
     return {
       success: false,
-      error: "Erreur réseau. Vérifiez votre connexion et réessayez.",
+      error: "Erreur réseau. Vérifie ta connexion et réessaie.",
     };
   }
 }
@@ -276,20 +291,19 @@ export async function getAllOrdersDB(options?: {
         o.clientNom.toLowerCase().includes(s) ||
         o.clientTelephone.toLowerCase().includes(s) ||
         o.id.toLowerCase().includes(s) ||
-        o.clientQuartier.toLowerCase().includes(s)
+        o.clientQuartier.toLowerCase().includes(s) ||
+        (o.texteAEcrire && o.texteAEcrire.toLowerCase().includes(s))
     );
   }
 
   return addSignedUrlsToOrders(orders);
 }
 
-/** Récupère une commande par ID avec son historique complet. */
-export async function getOrderByIdDB(
-  id: string
-): Promise<AdminOrder | null> {
+/** Récupère une commande par son ID avec historique complet et URLs signées. */
+export async function getOrderByIdDB(id: string): Promise<AdminOrder | null> {
   const admin = getSupabaseAdmin();
 
-  const [orderResult, histResult] = await Promise.all([
+  const [orderResult, historyResult] = await Promise.all([
     admin.from("commandes").select("*").eq("id", id).single(),
     admin
       .from("statuts_historique")
@@ -298,22 +312,29 @@ export async function getOrderByIdDB(
       .order("created_at", { ascending: false }),
   ]);
 
-  if (orderResult.error || !orderResult.data) return null;
+  if (orderResult.error || !orderResult.data) {
+    console.error("getOrderByIdDB error:", orderResult.error);
+    return null;
+  }
 
-  const historique: StatusHistoryItem[] = (histResult.data || []).map((h) => ({
-    id: h.id as string,
-    ancienStatut: h.ancien_statut as OrderStatus | null | undefined,
-    nouveauStatut: h.nouveau_statut as OrderStatus,
-    commentaire: h.commentaire as string | undefined,
-    date: h.created_at as string,
-  }));
+  const historique: StatusHistoryItem[] = (historyResult.data || []).map(
+    (h) => ({
+      id: h.id,
+      ancienStatut: (h.ancien_statut as OrderStatus) || null,
+      nouveauStatut: h.nouveau_statut as OrderStatus,
+      commentaire: h.commentaire || undefined,
+      date: h.created_at,
+    })
+  );
 
-  const order = dbRowToAdminOrder(orderResult.data, historique);
-  const [withUrls] = await addSignedUrlsToOrders([order]);
-  return withUrls;
+  const [orderWithSignedUrls] = await addSignedUrlsToOrders([
+    dbRowToAdminOrder(orderResult.data, historique),
+  ]);
+
+  return orderWithSignedUrls || null;
 }
 
-/** Change le statut d'une commande et insère une entrée dans l'historique. */
+/** Met à jour le statut d'une commande et ajoute une ligne d'historique. */
 export async function updateOrderStatusDB(
   id: string,
   newStatus: OrderStatus,
@@ -416,7 +437,7 @@ export async function updateOrderPreviewDB(
     commande_id: id,
     ancien_statut: (current?.statut as string) || null,
     nouveau_statut: "apercu_envoye",
-    commentaire: "Aperçu retouché téléversé par l'administrateur.",
+    commentaire: "Aperçu retouché téléversé par l’administrateur.",
   });
 
   return getOrderByIdDB(id);
@@ -426,11 +447,10 @@ export async function updateOrderPreviewDB(
 export async function getAdminStatsDB() {
   const admin = getSupabaseAdmin();
 
-  // Récupérer toutes les commandes pour les stats
   const { data: allOrders, error } = await admin
     .from("commandes")
     .select(
-      "id, created_at, forfait_prix, statut, client_nom, client_telephone, client_quartier, forfait_nom, forfait_id, photo_originale_url, photo_apercu_url, forfait_prix"
+      "id, created_at, forfait_prix, statut, client_nom, client_telephone, client_quartier, forfait_nom, forfait_id, photo_originale_url, photo_apercu_url, texte_a_ecrire, echeance"
     )
     .order("created_at", { ascending: false });
 
@@ -455,23 +475,22 @@ export async function getAdminStatsDB() {
 
   const PAID_STATUSES = ["validee_payee", "en_impression", "livree"];
 
-  // CA total
   const totalRevenue = allOrders
     .filter((o) => PAID_STATUSES.includes(o.statut))
     .reduce((sum, o) => sum + (o.forfait_prix || 0), 0);
 
-  // CA du mois courant
   const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
   const currentMonthRevenue = allOrders
-    .filter(
-      (o) =>
-        PAID_STATUSES.includes(o.statut) &&
-        new Date(o.created_at).getMonth() === now.getMonth() &&
-        new Date(o.created_at).getFullYear() === now.getFullYear()
-    )
+    .filter((o) => {
+      if (!PAID_STATUSES.includes(o.statut)) return false;
+      const d = new Date(o.created_at);
+      return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    })
     .reduce((sum, o) => sum + (o.forfait_prix || 0), 0);
 
-  // Comptage par statut
   const statusCounts: Record<OrderStatus, number> = {
     nouvelle: 0,
     apercu_envoye: 0,
@@ -480,8 +499,9 @@ export async function getAdminStatsDB() {
     en_impression: 0,
     livree: 0,
   };
+
   allOrders.forEach((o) => {
-    if (statusCounts[o.statut as OrderStatus] !== undefined) {
+    if (o.statut in statusCounts) {
       statusCounts[o.statut as OrderStatus]++;
     }
   });
@@ -509,7 +529,6 @@ export async function getAdminStatsDB() {
     ca: data.revenue,
   }));
 
-  // 5 commandes les plus récentes (pas besoin d'historique pour la liste)
   const recentOrdersRaw = allOrders.slice(0, 5).map((row) =>
     dbRowToAdminOrder(row, [])
   );
@@ -545,6 +564,7 @@ export interface PublicPreviewData {
   forfaitId: string;
   forfaitFormat?: string;
   photoApercuUrl?: string;
+  texteAEcrire?: string;
   statut: string;
   createdAt: string;
 }
@@ -563,7 +583,7 @@ export async function getPublicPreviewByToken(
     const { data, error } = await admin
       .from("apercu_public_view")
       .select(
-        "lien_public, client_nom, forfait_nom, forfait_id, forfait_format, photo_apercu_url, statut, created_at"
+        "lien_public, client_nom, forfait_nom, forfait_id, forfait_format, photo_apercu_url, texte_a_ecrire, statut, created_at"
       )
       .eq("lien_public", token)
       .single();
@@ -587,6 +607,7 @@ export async function getPublicPreviewByToken(
       forfaitId: data.forfait_id as string,
       forfaitFormat: (data.forfait_format as string) || undefined,
       photoApercuUrl: photoUrl,
+      texteAEcrire: (data.texte_a_ecrire as string) || undefined,
       statut: data.statut as string,
       createdAt: data.created_at as string,
     };
@@ -595,4 +616,3 @@ export async function getPublicPreviewByToken(
     return null;
   }
 }
-

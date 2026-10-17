@@ -11,10 +11,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ImageIcon,
+  MessageCircle,
 } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import StatusBadge from "@/components/admin/StatusBadge";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatBurkinaWhatsAppPhone } from "@/lib/utils";
 import { AdminOrder, OrderStatus } from "@/lib/admin-db";
 
 const STATUS_FILTERS: { id: OrderStatus | "all"; label: string }[] = [
@@ -22,7 +23,7 @@ const STATUS_FILTERS: { id: OrderStatus | "all"; label: string }[] = [
   { id: "nouvelle", label: "Nouvelles" },
   { id: "apercu_envoye", label: "Aperçu envoyé" },
   { id: "validee_payee", label: "Validées & Payées" },
-  { id: "en_impression", label: "En impression" },
+  { id: "en_impression", label: "En fabrication" },
   { id: "livree", label: "Livrées" },
   { id: "refusee", label: "Refusées" },
 ];
@@ -147,12 +148,13 @@ export default function AdminOrdersListPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-white/10 bg-[#1A1322] text-stone-400 text-[11px] font-bold uppercase tracking-wider">
+                  <th className="py-4 px-4">Date</th>
                   <th className="py-4 px-4">Photo & Réf</th>
                   <th className="py-4 px-4">Client</th>
-                  <th className="py-4 px-4">Forfait</th>
-                  <th className="py-4 px-4">Quartier & Note</th>
+                  <th className="py-4 px-4">Format</th>
+                  <th className="py-4 px-4">Message sur tableau</th>
+                  <th className="py-4 px-4">Échéance</th>
                   <th className="py-4 px-4">Statut</th>
-                  <th className="py-4 px-4">Date</th>
                   <th className="py-4 px-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -160,105 +162,151 @@ export default function AdminOrdersListPage() {
                 {paginatedOrders.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="py-12 text-center text-stone-400 text-sm"
                     >
                       Aucune commande ne correspond aux filtres sélectionnés.
                     </td>
                   </tr>
                 ) : (
-                  paginatedOrders.map((order) => (
-                    <tr
-                      key={order.id}
-                      className="hover:bg-white/5 transition-colors group cursor-pointer"
-                    >
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="relative w-12 h-14 rounded-xl overflow-hidden bg-stone-900 border border-white/10 shrink-0">
-                            {order.photoOriginaleUrl ? (
-                              <img
-                                src={order.photoOriginaleUrl}
-                                alt="Photo"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-stone-600">
-                                <ImageIcon className="w-4 h-4" />
-                              </div>
-                            )}
-                            {order.photoApercuUrl && (
-                              <div
-                                title="Aperçu prêt"
-                                className="absolute bottom-0 inset-x-0 bg-brand-purple text-[8px] font-bold text-center text-white py-0.5"
-                              >
-                                HD
-                              </div>
-                            )}
+                  paginatedOrders.map((order) => {
+                    const waPhone = formatBurkinaWhatsAppPhone(order.clientTelephone);
+                    return (
+                      <tr
+                        key={order.id}
+                        className="hover:bg-white/5 transition-colors group cursor-pointer"
+                      >
+                        <td className="py-4 px-4 text-xs text-stone-400 whitespace-nowrap">
+                          {new Date(order.createdAt).toLocaleDateString("fr-FR", {
+                            day: "numeric",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-3">
+                            <div className="relative w-12 h-14 rounded-xl overflow-hidden bg-stone-900 border border-white/10 shrink-0">
+                              {order.photoOriginaleUrl ? (
+                                <img
+                                  src={order.photoOriginaleUrl}
+                                  alt="Photo"
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-stone-600">
+                                  <ImageIcon className="w-4 h-4" />
+                                </div>
+                              )}
+                              {order.photoApercuUrl && (
+                                <div
+                                  title="Aperçu prêt"
+                                  className="absolute bottom-0 inset-x-0 bg-brand-purple text-[8px] font-bold text-center text-white py-0.5"
+                                >
+                                  HD
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              <span className="font-mono text-xs font-bold text-stone-300 block">
+                                {order.id}
+                              </span>
+                            </div>
                           </div>
-                          <div>
-                            <span className="font-mono text-xs font-bold text-stone-300 block">
-                              {order.id}
+                        </td>
+
+                        <td className="py-4 px-4">
+                          <div className="font-bold text-[#F5F0FA]">
+                            {order.clientNom}
+                          </div>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <a
+                              href={`https://wa.me/${waPhone}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 font-mono transition-colors"
+                              title="Ouvrir WhatsApp client"
+                            >
+                              <MessageCircle className="w-3.5 h-3.5 shrink-0" />
+                              <span>{order.clientTelephone}</span>
+                            </a>
+                          </div>
+                          <div className="text-[11px] text-stone-400 mt-0.5">
+                            {order.clientQuartier}
+                          </div>
+                        </td>
+
+                        <td className="py-4 px-4 whitespace-nowrap">
+                          <span className="font-bold text-[#A78BFA] block">
+                            {order.forfaitFormat}
+                          </span>
+                          <span className="text-xs text-stone-300 block">
+                            {order.forfaitNom}
+                          </span>
+                          <span className="text-[11px] font-semibold text-amber-400">
+                            {formatPrice(order.forfaitPrix)}
+                          </span>
+                        </td>
+
+                        <td className="py-4 px-4 max-w-xs">
+                          {order.texteAEcrire ? (
+                            <div
+                              className="text-stone-200 text-xs font-medium line-clamp-2 italic"
+                              title={order.texteAEcrire}
+                            >
+                              « {order.texteAEcrire} »
+                            </div>
+                          ) : order.laisserProposerTexte ? (
+                            <span className="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                              Proposer un texte
                             </span>
-                          </div>
-                        </div>
-                      </td>
+                          ) : (
+                            <span className="text-stone-500 text-xs">—</span>
+                          )}
+                          {order.occasionNote && (
+                            <div
+                              className="text-[11px] text-stone-400 truncate mt-1"
+                              title={order.occasionNote}
+                            >
+                              Note : {order.occasionNote}
+                            </div>
+                          )}
+                        </td>
 
-                      <td className="py-4 px-4">
-                        <div className="font-bold text-[#F5F0FA]">
-                          {order.clientNom}
-                        </div>
-                        <div className="text-xs text-stone-400 font-mono mt-0.5">
-                          {order.clientTelephone}
-                        </div>
-                      </td>
+                        <td className="py-4 px-4 whitespace-nowrap">
+                          {order.echeance === "cette_semaine" ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
+                              ⚡ Cette semaine
+                            </span>
+                          ) : order.echeance === "ce_mois" ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-white/5 text-stone-300 border border-white/10">
+                              Ce mois
+                            </span>
+                          ) : (
+                            <span className="text-xs text-stone-500">
+                              {order.echeance === "plus_tard" ? "Plus tard" : "—"}
+                            </span>
+                          )}
+                        </td>
 
-                      <td className="py-4 px-4">
-                        <span className="font-bold text-[#A78BFA] block">
-                          {order.forfaitNom}
-                        </span>
-                        <span className="text-[11px] font-semibold text-amber-400">
-                          {formatPrice(order.forfaitPrix)}
-                        </span>
-                      </td>
+                        <td className="py-4 px-4 whitespace-nowrap">
+                          <StatusBadge statut={order.statut} size="sm" />
+                        </td>
 
-                      <td className="py-4 px-4 max-w-xs">
-                        <div className="text-stone-300 font-semibold truncate">
-                          {order.clientQuartier}
-                        </div>
-                        {order.occasionNote && (
-                          <div
-                            className="text-[11px] text-stone-400 truncate italic mt-0.5"
-                            title={order.occasionNote}
+                        <td className="py-4 px-4 text-right">
+                          <Link
+                            href={`/wendclass/commandes/${order.id}`}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-purple/20 hover:bg-brand-purple text-brand-purple hover:text-white text-xs font-bold transition-all border border-brand-purple/30 group-hover:scale-105"
                           >
-                            « {order.occasionNote} »
-                          </div>
-                        )}
-                      </td>
-
-                      <td className="py-4 px-4 whitespace-nowrap">
-                        <StatusBadge statut={order.statut} size="sm" />
-                      </td>
-
-                      <td className="py-4 px-4 text-xs text-stone-400 whitespace-nowrap">
-                        {new Date(order.createdAt).toLocaleDateString("fr-FR", {
-                          day: "numeric",
-                          month: "short",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </td>
-
-                      <td className="py-4 px-4 text-right">
-                        <Link
-                          href={`/wendclass/commandes/${order.id}`}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-purple/20 hover:bg-brand-purple text-brand-purple hover:text-white text-xs font-bold transition-all border border-brand-purple/30 group-hover:scale-105"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>Gérer</span>
-                        </Link>
-                      </td>
-                    </tr>
-                  ))
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>Gérer</span>
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>

@@ -53,7 +53,7 @@ const ALL_STATUSES: {
   },
   {
     id: "en_impression",
-    label: "En impression",
+    label: "En fabrication",
     icon: Layers,
     color: "text-purple-400",
   },
@@ -82,11 +82,20 @@ export default function OrderDetailPage() {
   const [uploadingPreview, setUploadingPreview] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Copy link state
+  // Copy link and copy text state
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedText, setCopiedText] = useState(false);
 
   // Lightbox Modal for full image
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+
+  const handleCopyText = (text: string) => {
+    if (typeof navigator !== "undefined") {
+      navigator.clipboard.writeText(text);
+      setCopiedText(true);
+      setTimeout(() => setCopiedText(false), 2000);
+    }
+  };
 
   const fetchOrder = async () => {
     try {
@@ -209,12 +218,13 @@ export default function OrderDetailPage() {
   const publicPreviewUrl = `${siteBaseUrl}/apercu/${publicToken}`;
 
   const formattedPhone = formatBurkinaWhatsAppPhone(order.clientTelephone);
+  const firstName = order.clientNom.trim().split(" ")[0] || order.clientNom;
 
   const whatsappGeneralUrl = `https://wa.me/${formattedPhone}?text=Bonjour%20${encodeURIComponent(
-    order.clientNom
-  )}%2C%20c%27est%20M%C3%A9moire%20Vive%20concernant%20votre%20commande%20(${order.id}).`;
+    firstName
+  )}%20%F0%9F%91%8B%20C%27est%20M%C3%A9moire%20Vive%20concernant%20ton%20tableau%20photo%20(${order.id}).`;
 
-  const whatsappSendPreviewMessage = `Bonjour ${order.clientNom} 👋 Votre souvenir chez Mémoire Vive est prêt ! Découvrez l'aperçu de votre ${order.forfaitNom} ici : ${publicPreviewUrl}\n\nVous ne payez que si le résultat vous plaît. Aucune surprise, aucun risque 💜`;
+  const whatsappSendPreviewMessage = `Bonjour ${firstName} 👋 Ton tableau photo d’anniversaire chez Mémoire Vive est prêt ! Découvre ton aperçu ici : ${publicPreviewUrl}\n\nTu ne paies que si le résultat te plaît. 0 FCFA d'avance, aucun risque 💜`;
 
   const whatsappSendPreviewUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
     whatsappSendPreviewMessage
@@ -307,8 +317,91 @@ export default function OrderDetailPage() {
 
         {/* 2-Column Grid: Left (Photos & Retouch), Right (Workflow & Details) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column (Photos comparison & Upload aperçu) - 7 cols */}
+          {/* Left Column (Creation instructions, Photos comparison & Upload aperçu) - 7 cols */}
           <div className="lg:col-span-7 space-y-6">
+            {/* Bloc « Création du tableau » pour le retoucheur */}
+            <div className="bg-[#241B2E] rounded-3xl p-5 sm:p-6 border border-brand-purple/30 shadow-[0_4px_25px_rgba(124,58,237,0.15)] space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-brand-gold" />
+                  <h2 className="font-heading text-base font-bold text-white">
+                    Création du tableau · Consignes studio
+                  </h2>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-brand-purple/20 text-[#A78BFA] border border-brand-purple/40">
+                    {order.forfaitFormat} · {order.forfaitNom}
+                  </span>
+                  {order.echeance === "cette_semaine" ? (
+                    <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
+                      ⚡ Cette semaine
+                    </span>
+                  ) : order.echeance === "ce_mois" ? (
+                    <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/5 text-stone-300 border border-white/10">
+                      Ce mois
+                    </span>
+                  ) : order.echeance === "plus_tard" ? (
+                    <span className="text-xs text-stone-400">Plus tard</span>
+                  ) : null}
+                </div>
+              </div>
+
+              {/* Message à écrire sur la photo */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-stone-400 uppercase tracking-wider">
+                    Texte à intégrer sur la photo :
+                  </span>
+                  {order.texteAEcrire && (
+                    <button
+                      type="button"
+                      onClick={() => handleCopyText(order.texteAEcrire!)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#150F1B] hover:bg-white/10 text-brand-purple hover:text-white text-xs font-bold transition-colors border border-purple-500/30"
+                    >
+                      {copiedText ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span className="text-emerald-400">Texte copié !</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>Copier le texte</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+
+                {order.texteAEcrire ? (
+                  <div className="p-4 rounded-2xl bg-[#150F1B] border border-white/10 text-[#F5F0FA] font-medium text-sm sm:text-base leading-relaxed select-all">
+                    « {order.texteAEcrire} »
+                  </div>
+                ) : order.laisserProposerTexte ? (
+                  <div className="p-4 rounded-2xl bg-[#150F1B] border border-purple-500/30 text-[#A78BFA] text-xs sm:text-sm font-semibold flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-brand-gold shrink-0" />
+                    <span>Le studio propose un texte : le client souhaite une suggestion personnalisée.</span>
+                  </div>
+                ) : (
+                  <div className="p-3 rounded-xl bg-[#150F1B] text-stone-500 text-xs italic">
+                    Aucun texte spécifié.
+                  </div>
+                )}
+              </div>
+
+              {/* Note d'occasion client si renseignée */}
+              {order.occasionNote && (
+                <div className="pt-2 border-t border-white/5">
+                  <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider block mb-1">
+                    Précisions ou occasion :
+                  </span>
+                  <p className="text-xs text-stone-300 italic">
+                    « {order.occasionNote} »
+                  </p>
+                </div>
+              )}
+            </div>
+
             {/* Photos Viewer Card */}
             <div className="bg-[#241B2E] rounded-3xl p-5 sm:p-6 border border-purple-500/15 shadow-[0_4px_25px_rgba(0,0,0,0.3)] space-y-4">
               <h2 className="font-heading text-base font-bold text-[#F5F0FA] flex items-center gap-2">
@@ -497,7 +590,7 @@ export default function OrderDetailPage() {
                         : "Cliquez pour choisir le fichier HD retouché"}
                     </p>
                     <p className="text-[11px] text-stone-400 mt-0.5">
-                      JPG, PNG, WebP (Restauration & colorisation finie)
+                      JPG, PNG, WebP (Portrait retouché avec message intégré)
                     </p>
                   </div>
 
@@ -524,18 +617,6 @@ export default function OrderDetailPage() {
                 </form>
               </div>
             </div>
-
-            {/* Client Occasion Note */}
-            {order.occasionNote && (
-              <div className="bg-[#241B2E] rounded-3xl p-5 border border-purple-500/15 shadow-[0_4px_25px_rgba(0,0,0,0.3)]">
-                <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider block mb-1">
-                  Instructions & Contexte Client
-                </span>
-                <p className="text-xs sm:text-sm text-stone-200 italic leading-relaxed">
-                  « {order.occasionNote} »
-                </p>
-              </div>
-            )}
           </div>
 
           {/* Right Column (Workflow Status Transitions, Details, Timeline) - 5 cols */}
@@ -608,9 +689,9 @@ export default function OrderDetailPage() {
                 </div>
 
                 <div className="flex justify-between pb-2.5 border-b border-white/5">
-                  <span className="text-stone-400">Format & Cadre :</span>
+                  <span className="text-stone-400">Format & Support :</span>
                   <span className="font-semibold text-stone-200">
-                    {order.forfaitFormat}
+                    {order.forfaitFormat} · Panneau PVC rigide
                   </span>
                 </div>
 

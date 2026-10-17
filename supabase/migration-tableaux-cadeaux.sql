@@ -135,10 +135,10 @@ VALUES (
     'photos-commandes',
     'photos-commandes',
     false,
-    10485760,
+    31457280,
     ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/heic', 'image/heif']
 )
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET file_size_limit = 31457280;
 
 -- Bucket apercus-commandes : LECTURE PUBLIQUE (affichage fluide + vignette WhatsApp)
 INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
@@ -146,10 +146,10 @@ VALUES (
     'apercus-commandes',
     'apercus-commandes',
     true,
-    10485760,
+    31457280,
     ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 )
-ON CONFLICT (id) DO UPDATE SET public = true;
+ON CONFLICT (id) DO UPDATE SET public = true, file_size_limit = 31457280;
 
 -- Politiques Storage
 DROP POLICY IF EXISTS "Anon upload photos-commandes" ON storage.objects;

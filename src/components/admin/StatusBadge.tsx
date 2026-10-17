@@ -58,12 +58,12 @@ export const STATUS_CONFIG: Record<
     description: "Aperçu validé et paiement Mobile Money reçu",
   },
   en_impression: {
-    label: "En impression",
+    label: "En fabrication",
     bg: "bg-purple-950/60",
     text: "text-purple-400",
     border: "border-purple-500/30",
     icon: Layers,
-    description: "Impression Fine Art et encadrement atelier",
+    description: "Impression et montage sur panneau PVC à l'atelier",
   },
   livree: {
     label: "Livrée",
@@ -71,7 +71,7 @@ export const STATUS_CONFIG: Record<
     text: "text-pink-400",
     border: "border-pink-500/30",
     icon: Truck,
-    description: "Cadre livré avec succès au client",
+    description: "Tableau photo livré avec succès au client",
   },
 };
 

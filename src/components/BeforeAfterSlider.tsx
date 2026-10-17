@@ -123,7 +123,7 @@ export default function BeforeAfterSlider() {
         })}
       </div>
 
-      {/* Cadre du comparateur interactif Avant / Tableau fini */}
+      {/* Conteneur du comparateur interactif Avant / Tableau fini */}
       <div
         ref={containerRef}
         onMouseDown={() => setIsDragging(true)}

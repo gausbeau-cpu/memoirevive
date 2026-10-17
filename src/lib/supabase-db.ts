@@ -501,9 +501,25 @@ export async function getAdminStatsDB() {
     livree: 0,
   };
 
+  const formatCounts: Record<OfferId, number> = {
+    format_30x40: 0,
+    format_40x60: 0,
+    format_50x70: 0,
+  };
+
+  let monthOrdersCount = 0;
+
   allOrders.forEach((o) => {
     if (o.statut in statusCounts) {
       statusCounts[o.statut as OrderStatus]++;
+    }
+    const fId = o.forfait_id as OfferId;
+    if (fId in formatCounts) {
+      formatCounts[fId]++;
+    }
+    const d = new Date(o.created_at);
+    if (d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+      monthOrdersCount++;
     }
   });
 
@@ -539,7 +555,10 @@ export async function getAdminStatsDB() {
     totalRevenue,
     currentMonthRevenue,
     totalOrdersCount: allOrders.length,
+    monthOrdersCount,
+    pendingPreviewCount: statusCounts.nouvelle,
     statusCounts,
+    formatCounts,
     chartData,
     recentOrders,
   };

@@ -16,10 +16,10 @@ import OrderModal from "@/components/OrderModal/OrderModal";
 
 export default function Home() {
   const [isOrderModalOpen, setIsOrderModalOpen] = useState<boolean>(false);
-  const [selectedPackage, setSelectedPackage] = useState<string>("memoire");
+  const [selectedFormat, setSelectedFormat] = useState<string>("format_40x60");
 
-  const handleOpenOrderModal = (pkgId: string = "memoire") => {
-    setSelectedPackage(pkgId);
+  const handleOpenOrderModal = (formatId: string = "format_40x60") => {
+    setSelectedFormat(formatId);
     setIsOrderModalOpen(true);
   };
 
@@ -29,47 +29,47 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-brand-bg relative pb-16 md:pb-0">
-      {/* 1. Bandeau de Réassurance Supérieur */}
+      {/* 1. Bandeau de réassurance supérieur */}
       <TrustBar />
 
-      {/* Header & Logo */}
-      <Header onOpenOrderModal={() => handleOpenOrderModal("memoire")} />
+      {/* 2. Header & Logo typographique */}
+      <Header onOpenOrderModal={() => handleOpenOrderModal("format_40x60")} />
 
-      {/* Main Content */}
+      {/* Contenu principal */}
       <main className="flex-1">
-        {/* 2. Hero Section + Curseur Interactif Avant/Après */}
-        <Hero onOpenOrderModal={() => handleOpenOrderModal("memoire")} />
+        {/* 3. Hero Section + Comparateur Avant/Après */}
+        <Hero onOpenOrderModal={() => handleOpenOrderModal("format_40x60")} />
 
-        {/* 3. Comment ça marche (3 étapes Cialdini/Hick) */}
+        {/* 4. Comment ça marche en 3 étapes */}
         <HowItWorks />
 
-        {/* 4. Les 3 Forfaits (Souvenir, Mémoire [Best-seller], Héritage) */}
-        <PricingSection onSelectPackage={(pkgId) => handleOpenOrderModal(pkgId)} />
+        {/* 5. Les 3 formats (Petit 30x40, Coup de cœur 40x60, Grand 50x70) */}
+        <PricingSection onSelectPackage={(formatId) => handleOpenOrderModal(formatId)} />
 
-        {/* 5. Garantie Inconditionnelle & Renversement du Risque */}
+        {/* 6. Garantie Zéro Risque */}
         <GuaranteeSection />
 
-        {/* 6. Preuve Sociale Locale (Ouagadougou) */}
+        {/* 7. Témoignages (désactivés tant qu'aucun avis réel n'est collecté) */}
         <Testimonials />
 
-        {/* 7. FAQ Courte & Précise */}
+        {/* 8. Questions fréquentes */}
         <FAQSection />
 
-        {/* 8. Appel à l'Action Final */}
-        <FinalCTA onOpenOrderModal={() => handleOpenOrderModal("memoire")} />
+        {/* 9. Appel à l'action final */}
+        <FinalCTA onOpenOrderModal={() => handleOpenOrderModal("format_40x60")} />
       </main>
 
-      {/* Footer */}
+      {/* 10. Pied de page */}
       <Footer />
 
-      {/* Sticky Bottom Bar on Mobile */}
-      <StickyMobileBar onOpenOrderModal={() => handleOpenOrderModal("memoire")} />
+      {/* 11. Barre fixe mobile au bas de l'écran */}
+      <StickyMobileBar onOpenOrderModal={() => handleOpenOrderModal("format_40x60")} />
 
-      {/* 4-Step Interactive Order Modal */}
+      {/* 12. Formulaire de commande mono-écran ultra-rapide (< 45s) */}
       <OrderModal
         isOpen={isOrderModalOpen}
         onClose={handleCloseOrderModal}
-        initialPackage={selectedPackage}
+        initialPackage={selectedFormat}
       />
     </div>
   );

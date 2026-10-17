@@ -1,42 +1,40 @@
 import React from "react";
 import Link from "next/link";
-import { Sparkles, ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft, FileText } from "lucide-react";
+import Logo from "@/components/Logo";
 import Footer from "@/components/Footer";
+import { SITE_CONTENT, WHATSAPP_NUMBER } from "@/content/site";
 
 export const metadata = {
   title: "Conditions Générales | Mémoire Vive",
-  description: "Conditions générales d'utilisation et de vente du service Mémoire Vive.",
+  description:
+    "Conditions générales de vente et d’utilisation du service de tableaux photo personnalisés Mémoire Vive à Ouagadougou.",
 };
 
 export default function ConditionsGenerales() {
+  const brand = SITE_CONTENT.brand;
+
   return (
     <div className="min-h-screen flex flex-col bg-brand-bg text-brand-charcoal">
-      {/* Top Simple Header */}
+      {/* Header */}
       <header className="sticky top-0 z-40 bg-brand-bg/95 backdrop-blur-md border-b border-brand-border/70">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-purple to-brand-magenta flex items-center justify-center text-white shadow-glow-purple">
-              <Sparkles className="w-4 h-4 text-brand-gold" strokeWidth={2} />
-            </div>
-            <span className="font-heading text-lg sm:text-xl font-bold tracking-tight text-brand-charcoal">
-              Mémoire <span className="text-brand-purple">Vive</span>
-            </span>
-          </Link>
+          <Logo size="sm" showTagline={false} />
 
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-brand-purple hover:text-brand-purple-hover transition-colors"
+            className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-brand-purple hover:underline transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Retour à l'accueil</span>
+            <span>Retour à l’accueil</span>
           </Link>
         </div>
       </header>
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-16">
-        <div className="bg-white rounded-[2rem] p-6 sm:p-12 border border-brand-border/80 shadow-warm-card">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-purple-light text-brand-purple text-xs font-bold mb-4">
+        <div className="bg-white rounded-[2rem] p-6 sm:p-12 border border-stone-200 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-purple/10 text-brand-purple text-xs font-bold mb-4">
             <FileText className="w-3.5 h-3.5" />
             <span>Informations contractuelles</span>
           </div>
@@ -44,61 +42,60 @@ export default function ConditionsGenerales() {
           <h1 className="font-heading text-3xl sm:text-4xl font-bold text-brand-charcoal mb-4">
             Conditions Générales
           </h1>
-          <p className="text-sm text-brand-muted mb-8 pb-6 border-b border-brand-border/60">
+          <p className="text-sm text-stone-500 mb-8 pb-6 border-b border-stone-200">
             Dernière mise à jour : {new Date().toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" })}
           </p>
 
-          {/* Legal Text Area */}
-          <div className="prose prose-stone max-w-none space-y-6 text-sm sm:text-base text-brand-muted leading-relaxed">
-            <section className="space-y-3">
+          <div className="space-y-6 text-sm sm:text-base text-stone-600 leading-relaxed">
+            <section className="space-y-2">
               <h2 className="font-heading text-xl font-bold text-brand-charcoal">
                 1. Objet du service
               </h2>
               <p>
-                Le contenu de cette section sera fourni prochainement. Mémoire Vive propose des services de restauration numérique de photographies et d'encadrement artisanal livrés à Ouagadougou.
+                Mémoire Vive propose un service de création de tableaux photo personnalisés montés sur panneau PVC, destinés aux cadeaux d’anniversaire à Ouagadougou. La prestation comprend l’optimisation et la retouche du portrait, l’intégration calligraphique d’un message personnalisé sur la photo, le tirage monté prêt à offrir et la livraison gratuite.
               </p>
             </section>
 
-            <section className="space-y-3">
+            <section className="space-y-2">
               <h2 className="font-heading text-xl font-bold text-brand-charcoal">
-                2. Aperçu gratuit et commande sans engagement
+                2. Aperçu gratuit sans aucun paiement préalable
               </h2>
               <p>
-                Le contenu de cette section sera fourni prochainement. Le client bénéficie systématiquement d'un aperçu numérique gratuit avant tout paiement.
+                L’envoi de la commande via le formulaire en ligne n’engage aucun paiement immédiat (0 FCFA d’avance). Un aperçu numérique haute définition est adressé par WhatsApp sous 24 heures. Le client est libre de valider l’aperçu ou de demander des ajustements. Si le résultat ne convient pas, la commande est annulée sans aucun frais.
               </p>
             </section>
 
-            <section className="space-y-3">
+            <section className="space-y-2">
               <h2 className="font-heading text-xl font-bold text-brand-charcoal">
-                3. Tarifs et modalités de paiement
+                3. Tarification et paiement Mobile Money
               </h2>
               <p>
-                Le contenu de cette section sera fourni prochainement. Les paiements s'effectuent par Mobile Money (Orange Money, Moov Money) uniquement après validation de l'aperçu.
+                Les tarifs des trois formats sont fermes et affichés en Francs CFA (FCFA) : Petit 30x40 cm (12 000 FCFA), Coup de cœur 40x60 cm (20 000 FCFA) et Grand 50x70 cm (30 000 FCFA). Le règlement s’effectue exclusivement après validation de l’aperçu, par Mobile Money (Orange Money ou Moov Money).
               </p>
             </section>
 
-            <section className="space-y-3">
+            <section className="space-y-2">
               <h2 className="font-heading text-xl font-bold text-brand-charcoal">
-                4. Livraison et garantie
+                4. Fabrication, livraison et garantie de remplacement
               </h2>
               <p>
-                Le contenu de cette section sera fourni prochainement.
+                Dès réception du règlement faisant suite à la validation de l’aperçu, le tableau est monté en atelier et livré gratuitement à Ouagadougou sous 24 heures (délai total maximum de 48 heures). Si le tableau arrive endommagé ou détérioré lors du transport, il est remplacé immédiatement et sans frais supplémentaires.
               </p>
             </section>
 
-            <section className="space-y-3">
+            <section className="space-y-2">
               <h2 className="font-heading text-xl font-bold text-brand-charcoal">
-                5. Service client & contact
+                5. Contact et assistance
               </h2>
               <p>
-                Pour toute demande ou assistance concernant une commande, vous pouvez joindre notre service client sur WhatsApp au{" "}
+                Pour toute question ou suivi de commande, notre équipe est joignable directement par WhatsApp au{" "}
                 <a
-                  href="https://wa.me/22675864399"
+                  href={`https://wa.me/${WHATSAPP_NUMBER}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-bold text-brand-purple hover:underline"
                 >
-                  +226 75 86 43 99
+                  {brand.phone}
                 </a>
                 .
               </p>
@@ -107,7 +104,6 @@ export default function ConditionsGenerales() {
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

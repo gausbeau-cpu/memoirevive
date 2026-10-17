@@ -22,21 +22,20 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Mémoire Vive | Restauration & Encadrement de Photos à Ouagadougou",
+  title: "Mémoire Vive | Tableaux photo cadeaux d’anniversaire à Ouagadougou",
   description:
-    "Offrez une seconde vie à vos photos de famille les plus précieuses. Aperçu gratuit avant paiement, retouche IA & artisanale, livraison à Ouagadougou.",
+    "Le plus beau cadeau pour son anniversaire : sa photo préférée sur un vrai tableau monté sur panneau PVC. Aperçu gratuit sous 24 h avant paiement, livraison gratuite à Ouagadougou.",
   keywords: [
-    "restauration photo",
-    "encadrement Ouagadougou",
+    "tableau photo personnalisé",
+    "cadeau anniversaire Ouagadougou",
     "Mémoire Vive",
-    "cadeau personnalisé Burkina",
-    "photos de famille",
-    "retouche photo IA",
+    "photo anniversaire Burkina Faso",
+    "tirage tableau PVC Ouaga",
   ],
   openGraph: {
-    title: "Mémoire Vive — Restauration & Encadrement de Photos",
+    title: "Mémoire Vive — Tableaux photo personnalisés pour cadeaux d’anniversaire",
     description:
-      "Aperçu gratuit avant tout paiement. Redonnez vie à vos souvenirs de famille et recevez un cadre en bois noble livré à Ouagadougou.",
+      "Aperçu 100 % gratuit avant tout paiement. Retouche de portrait, message personnalisé et tirage PVC livré à Ouagadougou.",
     locale: "fr_FR",
     type: "website",
   },

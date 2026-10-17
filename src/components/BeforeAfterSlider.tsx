@@ -1,267 +1,195 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Sparkles, ChevronLeft, ChevronRight, Gift, Award, Crown, Heart, PartyPopper, Camera } from "lucide-react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { Sparkles, ChevronLeft, ChevronRight, Gift, Heart, Users, Type } from "lucide-react";
+import { GALLERY_SLOTS, GallerySlot } from "@/content/gallery";
 
-export interface CategoryItem {
+interface DemoVisual {
   id: string;
   name: string;
-  shortName: string;
   icon: React.ElementType;
-  caption: string;
-  beforeImage: string;
-  afterImage: string;
-  resultLabel: string;
-  isBirthday?: boolean;
+  message: string;
+  beforeImg: string;
+  afterImg: string;
 }
 
-export const HERO_CATEGORIES: CategoryItem[] = [
+const DEMO_VISUALS: DemoVisual[] = [
   {
-    id: "memoire-familiale",
-    name: "Restauration & mémoire familiale",
-    shortName: "Restauration",
+    id: "slot-1",
+    name: "Entre amis",
+    icon: Users,
+    message: "Joyeux anniversaire Awa, je t’aime fort !",
+    beforeImg: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
+    afterImg: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85",
+  },
+  {
+    id: "slot-2",
+    name: "En couple",
     icon: Heart,
-    caption: "Exemple : Photo familiale ancienne restaurée & colorisée en cadre bois noble",
-    beforeImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
-    afterImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85",
-    resultLabel: "Résultat",
+    message: "Bon anniversaire mon amour, pour toujours",
+    beforeImg: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80",
+    afterImg: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=85",
   },
   {
-    id: "reussite",
-    name: "Portraits de réussite",
-    shortName: "Réussite",
-    icon: Award,
-    caption: "Exemple : Diplôme & soutenance sublimés pour honorer vos accomplissements",
-    beforeImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=80",
-    afterImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=85",
-    resultLabel: "Studio",
-  },
-  {
-    id: "traditionnelle",
-    name: "Portraits en tenue traditionnelle",
-    shortName: "Traditionnelle",
-    icon: Crown,
-    caption: "Exemple : Faso Dan Fani et parures d'apparat aux couleurs chatoyantes ravivées",
-    beforeImage: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1000&q=80",
-    afterImage: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1000&q=85",
-    resultLabel: "Colorisé",
-  },
-  {
-    id: "celebrations",
-    name: "Célébrations & cérémonies",
-    shortName: "Célébrations",
+    id: "slot-3",
+    name: "Portrait",
     icon: Gift,
-    caption: "Exemple : Cérémonie de mariage préservée et immortalisée avec émotion",
-    beforeImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80",
-    afterImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=85",
-    resultLabel: "Édition",
+    message: "Joyeux anniversaire mon champion ✨",
+    beforeImg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=80",
+    afterImg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=85",
   },
   {
-    id: "anniversaires",
-    name: "Anniversaires",
-    shortName: "Anniversaires",
-    icon: PartyPopper,
-    caption: "Exemple : Cadre personnalisé avec message d'anniversaire festif aux accents violet, rose et or",
-    beforeImage: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1000&q=80",
-    afterImage: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1000&q=85",
-    resultLabel: "Cadeau",
-    isBirthday: true,
-  },
-  {
-    id: "modernes",
-    name: "Portraits modernes",
-    shortName: "Modernes",
-    icon: Camera,
-    caption: "Exemple : Portrait contemporain haute définition au grain cinéma raffiné",
-    beforeImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=80",
-    afterImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=85",
-    resultLabel: "Galerie",
+    id: "slot-4",
+    name: "Message personnalisé",
+    icon: Type,
+    message: "Joyeux anniversaire ma best, merci d’être là",
+    beforeImg: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1000&q=80",
+    afterImg: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1000&q=85",
   },
 ];
 
-interface BeforeAfterSliderProps {
-  className?: string;
-}
+export default function BeforeAfterSlider() {
+  const [activeSlotIndex, setActiveSlotIndex] = useState(0);
+  const [sliderPosition, setSliderPosition] = useState(55);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-export default function BeforeAfterSlider({ className = "" }: BeforeAfterSliderProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [animKey, setAnimKey] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentSlot = GALLERY_SLOTS[activeSlotIndex] || GALLERY_SLOTS[0];
+  const currentDemo = DEMO_VISUALS[activeSlotIndex] || DEMO_VISUALS[0];
 
-  const currentCategory = HERO_CATEGORIES[currentIndex];
+  const handleMove = useCallback((clientX: number) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    setSliderPosition(percentage);
+  }, []);
+
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    if (!isDragging) return;
+    handleMove(e.touches[0].clientX);
+  }, [isDragging, handleMove]);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging) return;
+    handleMove(e.clientX);
+  }, [isDragging, handleMove]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
 
   useEffect(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % HERO_CATEGORIES.length);
-      setAnimKey((k) => k + 1);
-    }, 4500);
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("touchmove", handleTouchMove);
+      window.addEventListener("touchend", handleMouseUp);
+    }
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleMouseUp);
     };
-  }, [currentIndex]);
-
-  const goTo = (idx: number) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    setCurrentIndex(idx);
-    setAnimKey((k) => k + 1);
-  };
-
-  const handlePrev = () => goTo((currentIndex - 1 + HERO_CATEGORIES.length) % HERO_CATEGORIES.length);
-  const handleNext = () => goTo((currentIndex + 1) % HERO_CATEGORIES.length);
+  }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove]);
 
   return (
-    <div className={`w-full flex flex-col items-center ${className}`}>
-      {/* Category Tabs */}
-      <div className="w-full flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar gap-1.5 pb-3 px-1">
-        {HERO_CATEGORIES.map((cat, idx) => {
-          const isActive = idx === currentIndex;
-          const Icon = cat.icon;
+    <div className="w-full flex flex-col items-center">
+      {/* 4 Onglets de sélection des réalisations */}
+      <div className="flex items-center justify-center gap-1.5 p-1 bg-stone-100 rounded-2xl mb-3 max-w-full overflow-x-auto no-scrollbar">
+        {GALLERY_SLOTS.map((slot, idx) => {
+          const demo = DEMO_VISUALS[idx];
+          const Icon = demo?.icon || Gift;
+          const isSelected = idx === activeSlotIndex;
+
           return (
             <button
-              key={cat.id}
-              onClick={() => goTo(idx)}
-              className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                isActive
-                  ? "bg-brand-purple text-white shadow-glow-purple scale-[1.02]"
-                  : "bg-white/85 text-brand-charcoal hover:bg-brand-purple-light hover:text-brand-purple border border-brand-border/60"
+              key={slot.id}
+              onClick={() => {
+                setActiveSlotIndex(idx);
+                setSliderPosition(55);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                isSelected
+                  ? "bg-white text-brand-purple shadow-sm"
+                  : "text-stone-600 hover:text-brand-charcoal"
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? "text-brand-gold" : "text-brand-purple"}`} />
-              <span className="whitespace-nowrap">{cat.shortName}</span>
+              <Icon className="w-3.5 h-3.5" />
+              <span>{demo?.name || slot.name}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Main Image Frame with Automatic Curtain Reveal + Ken Burns */}
-      <div className="relative w-full">
-        <div
-          className="relative overflow-hidden rounded-[2rem] border-4 border-white/95 shadow-warm-card bg-stone-900 aspect-[4/3] sm:aspect-[4/3.5] w-full mx-auto select-none"
-          style={{ isolation: "isolate" }}
-        >
-          {/* Layer 1: Before (Original) Photo with Ken Burns Zoom */}
-          <div
-            key={`before-${animKey}`}
-            className="absolute inset-0 w-full h-full hero-ken-burns"
-          >
-            <img
-              src={currentCategory.beforeImage}
-              alt={currentCategory.name}
-              className="w-full h-full object-cover object-center grayscale contrast-125 brightness-[0.85] sepia-[0.4] blur-[0.3px]"
-            />
-            <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_40%,rgba(0,0,0,0.55)_100%)] opacity-70 pointer-events-none" />
-            <div className="absolute inset-0 opacity-35 bg-[repeating-linear-gradient(0deg,#000,#000_1px,transparent_1px,transparent_4px)] pointer-events-none" />
-          </div>
-
-          {/* Layer 2: After (Restored / Fine Art) Photo revealed by Automatic Curtain Swipe */}
-          <div
-            key={`after-${animKey}`}
-            className="absolute inset-0 w-full h-full hero-curtain-reveal"
-          >
-            <div className="absolute inset-0 w-full h-full hero-ken-burns">
-              <img
-                src={currentCategory.afterImage}
-                alt={currentCategory.name}
-                className="w-full h-full object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
-
-              {/* Special Birthday Dedication Overlay */}
-              {currentCategory.isBirthday && (
-                <div className="absolute bottom-12 inset-x-4 flex justify-center pointer-events-none">
-                  <div className="bg-gradient-to-r from-brand-purple/95 via-[#7C3AED]/90 to-brand-magenta/95 backdrop-blur-md border border-brand-gold/60 text-white rounded-2xl px-4 py-2.5 shadow-glow-magenta max-w-sm text-center">
-                    <div className="flex items-center justify-center gap-1.5 text-[11px] font-bold text-brand-gold uppercase tracking-wider mb-0.5">
-                      <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
-                      <span>Message personnalisé inclus</span>
-                      <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
-                    </div>
-                    <p className="font-heading text-sm font-bold text-white leading-tight">
-                      « Joyeux Anniversaire Maman · Avec tout notre amour »
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Single discrete result tag (no clashing/superimposed tags) */}
-              <div className="absolute bottom-4 right-4 z-20 bg-brand-purple/95 backdrop-blur-md text-white text-xs font-bold px-3.5 py-1 rounded-full border border-brand-magenta/40 shadow-glow-purple flex items-center gap-1.5 pointer-events-none">
-                <Sparkles className="w-3.5 h-3.5 text-brand-gold" strokeWidth={2} />
-                <span>{currentCategory.resultLabel}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Curtain Edge Line Sweeping Across */}
-          <div
-            key={`edge-${animKey}`}
-            className="absolute top-0 bottom-0 w-[3px] bg-white/90 z-30 pointer-events-none hero-curtain-edge"
-            style={{ boxShadow: "0 0 16px 4px rgba(255,255,255,0.75)" }}
+      {/* Cadre du comparateur interactif Avant / Tableau fini */}
+      <div
+        ref={containerRef}
+        onMouseDown={() => setIsDragging(true)}
+        onTouchStart={() => setIsDragging(true)}
+        className="relative w-full aspect-[4/5] sm:aspect-[4/4] max-w-md rounded-3xl overflow-hidden shadow-2xl border-4 border-white cursor-ew-resize select-none bg-stone-100"
+      >
+        {/* Couche APRÈS : Tableau fini avec retouche et texte élégant */}
+        <div className="absolute inset-0 w-full h-full">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={currentDemo.afterImg}
+            alt={`${currentSlot.name} — Tableau final`}
+            className="w-full h-full object-cover"
           />
 
-          {/* Top Category Header Badge */}
-          <div className="absolute top-3.5 inset-x-0 z-20 flex justify-center pointer-events-none">
-            <div className="bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-3.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5 shadow">
-              {(() => {
-                const IconComponent = currentCategory.icon;
-                return <IconComponent className="w-3.5 h-3.5 text-brand-gold" strokeWidth={2} />;
-              })()}
-              <span>{currentCategory.name}</span>
-            </div>
+          {/* Incrustation du message personnalisé sur le tableau fini */}
+          <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/85 via-black/45 to-transparent text-white flex flex-col items-center text-center">
+            <span className="text-[10px] tracking-widest uppercase font-bold text-brand-gold bg-black/40 px-2.5 py-0.5 rounded-full backdrop-blur-sm mb-1.5">
+              Tirage sur panneau PVC
+            </span>
+            <p className="font-heading italic text-base sm:text-lg font-bold text-white drop-shadow-md max-w-xs">
+              « {currentDemo.message} »
+            </p>
           </div>
 
-
-          {/* Bottom Progress Bar */}
-          <div className="absolute bottom-0 inset-x-0 h-1 bg-white/20 z-30 overflow-hidden rounded-b-[calc(2rem-4px)]">
-            <div
-              key={`bar-${animKey}`}
-              className="h-full bg-brand-purple hero-progress-bar"
-            />
+          <div className="absolute top-4 right-4 z-10 px-2.5 py-1 rounded-full bg-brand-purple text-white text-[11px] font-bold shadow-md">
+            Tableau fini ✨
           </div>
         </div>
 
-        {/* Carousel Navigation Arrows */}
-        <button
-          onClick={handlePrev}
-          className="absolute -left-3 sm:-left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-brand-charcoal shadow-lg border border-brand-border flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-          aria-label="Catégorie précédente"
+        {/* Couche AVANT : Photo originale simple (découpée par clip-path) */}
+        <div
+          className="absolute inset-0 w-full h-full overflow-hidden"
+          style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
         >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          onClick={handleNext}
-          className="absolute -right-3 sm:-right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-brand-charcoal shadow-lg border border-brand-border flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-          aria-label="Catégorie suivante"
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={currentDemo.beforeImg}
+            alt={`${currentSlot.name} — Photo brute`}
+            className="w-full h-full object-cover filter brightness-90 saturate-75"
+          />
+
+          <div className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold">
+            Photo brute
+          </div>
+        </div>
+
+        {/* Ligne et poignée centrale du slider */}
+        <div
+          className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)] z-20 pointer-events-none"
+          style={{ left: `${sliderPosition}%` }}
         >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+          <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-white text-brand-purple shadow-xl flex items-center justify-center border-2 border-brand-purple pointer-events-auto">
+            <div className="flex items-center">
+              <ChevronLeft className="w-3.5 h-3.5 -mr-1" />
+              <ChevronRight className="w-3.5 h-3.5" />
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Pagination Indicators */}
-      <div className="flex items-center justify-center gap-2 mt-4" role="tablist">
-        {HERO_CATEGORIES.map((cat, idx) => {
-          const isActive = idx === currentIndex;
-          return (
-            <button
-              key={cat.id}
-              onClick={() => goTo(idx)}
-              className={`transition-all duration-300 rounded-full ${
-                isActive
-                  ? "w-8 h-2.5 bg-brand-purple shadow-glow-purple"
-                  : "w-2.5 h-2.5 bg-stone-300 hover:bg-stone-400"
-              }`}
-              aria-label={`Catégorie ${cat.name} (${idx + 1} sur 6)`}
-              aria-selected={isActive}
-              role="tab"
-            />
-          );
-        })}
-      </div>
-
-      {/* Bottom Descriptive Caption */}
-      <p className="text-center text-xs text-brand-muted mt-2 font-medium max-w-md px-2 min-h-[32px] flex items-center justify-center">
-        {currentCategory.caption}
+      {/* Légende sous le comparateur */}
+      <p className="text-[11px] text-stone-500 font-medium text-center mt-2.5 flex items-center gap-1.5">
+        <Sparkles className="w-3.5 h-3.5 text-brand-purple" />
+        <span>Fais glisser le curseur pour voir la transformation</span>
       </p>
     </div>
   );
 }
-

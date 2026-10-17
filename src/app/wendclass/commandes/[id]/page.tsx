@@ -278,12 +278,10 @@ export default function OrderDetailPage() {
           <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
             {/* Download original button */}
             <a
-              href={order.photoOriginaleUrl}
-              download={`photo-originale-${order.id}.jpg`}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`/api/wendclass/commandes/${order.id}/download?type=originale`}
+              download
               className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#150F1B] border border-white/10 hover:border-purple-500/30 text-stone-300 hover:text-white text-xs font-semibold transition-colors"
-              title="Télécharger la photo originale client"
+              title="Télécharger la photo originale client sur ton ordinateur"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Télécharger l'originale</span>
@@ -416,12 +414,10 @@ export default function OrderDetailPage() {
                     <span>Photo Originale Client</span>
                     <div className="flex items-center gap-2">
                       <a
-                        href={order.photoOriginaleUrl}
-                        download={`photo-originale-${order.id}.jpg`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        href={`/api/wendclass/commandes/${order.id}/download?type=originale`}
+                        download
                         className="text-stone-300 hover:text-white flex items-center gap-1 text-[11px] transition-colors"
-                        title="Télécharger l'image originale"
+                        title="Télécharger l'image originale client"
                       >
                         <Download className="w-3 h-3" />
                         <span>Télécharger</span>
@@ -457,6 +453,15 @@ export default function OrderDetailPage() {
                     <span>Aperçu Retouché (Studio)</span>
                     {order.photoApercuUrl && (
                       <div className="flex items-center gap-2">
+                        <a
+                          href={`/api/wendclass/commandes/${order.id}/download?type=apercu`}
+                          download
+                          className="text-stone-300 hover:text-white flex items-center gap-1 text-[11px] transition-colors"
+                          title="Télécharger l'aperçu retouché studio"
+                        >
+                          <Download className="w-3 h-3" />
+                          <span>Télécharger</span>
+                        </a>
                         <a
                           href={`/apercu/${publicToken}`}
                           target="_blank"

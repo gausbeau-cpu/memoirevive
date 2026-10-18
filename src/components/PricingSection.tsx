@@ -98,8 +98,9 @@ export default function PricingSection({ onSelectPackage }: PricingSectionProps)
                 {/* Bouton de sélection */}
                 <div className="pt-2">
                   <button
+                    type="button"
                     onClick={() => onSelectPackage(offer.id)}
-                    className={`w-full py-3.5 px-4 rounded-full font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-sm ${
+                    className={`w-full min-h-[48px] py-3.5 px-4 rounded-full font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-sm cursor-pointer active:scale-[0.98] ${
                       isHighlight
                         ? "bg-brand-purple hover:bg-brand-purple/95 text-white shadow-brand-purple/20"
                         : "bg-stone-900 hover:bg-stone-800 text-white"

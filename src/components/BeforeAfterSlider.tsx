@@ -106,11 +106,12 @@ export default function BeforeAfterSlider() {
           return (
             <button
               key={slot.id}
+              type="button"
               onClick={() => {
                 setActiveSlotIndex(idx);
                 setSliderPosition(55);
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer active:scale-95 ${
                 isSelected
                   ? "bg-white text-brand-purple shadow-sm"
                   : "text-stone-600 hover:text-brand-charcoal"
@@ -176,10 +177,10 @@ export default function BeforeAfterSlider() {
           className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)] z-20 pointer-events-none"
           style={{ left: `${sliderPosition}%` }}
         >
-          <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-white text-brand-purple shadow-xl flex items-center justify-center border-2 border-brand-purple pointer-events-auto">
+          <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white text-brand-purple shadow-2xl flex items-center justify-center border-2 border-brand-purple pointer-events-auto touch-none cursor-ew-resize">
             <div className="flex items-center">
-              <ChevronLeft className="w-3.5 h-3.5 -mr-1" />
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronLeft className="w-4 h-4 -mr-1" />
+              <ChevronRight className="w-4 h-4" />
             </div>
           </div>
         </div>

@@ -42,8 +42,9 @@ export default function FAQSection() {
                 className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm transition-all duration-200"
               >
                 <button
+                  type="button"
                   onClick={() => toggleFAQ(index)}
-                  className="w-full min-h-[56px] p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-bold text-brand-charcoal hover:text-brand-purple transition-colors"
+                  className="w-full min-h-[56px] p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-bold text-brand-charcoal hover:text-brand-purple transition-colors cursor-pointer"
                   aria-expanded={isOpen}
                 >
                   <span className="text-sm sm:text-base font-heading pr-2">
@@ -84,7 +85,7 @@ export default function FAQSection() {
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold shadow-sm transition active:scale-[0.98] shrink-0"
+            className="flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold shadow-sm transition active:scale-[0.98] shrink-0"
           >
             <MessageCircle className="w-4 h-4 fill-white" />
             <span>{content.contactBlock.buttonText}</span>

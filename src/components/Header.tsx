@@ -53,8 +53,9 @@ export default function Header({ onOpenOrderModal }: HeaderProps) {
 
           {/* CTA Principal */}
           <button
+            type="button"
             onClick={() => onOpenOrderModal()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-xs font-bold shadow-md shadow-brand-purple/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-xs font-bold shadow-md shadow-brand-purple/20 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
           >
             <span>{content.ctaButton}</span>
             <span className="bg-brand-pink text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
@@ -69,15 +70,16 @@ export default function Header({ onOpenOrderModal }: HeaderProps) {
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 active:scale-95 transition-transform"
             aria-label="Contacter sur WhatsApp"
           >
             <MessageCircle className="w-5 h-5 text-emerald-600" strokeWidth={2} />
           </a>
 
           <button
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="w-10 h-10 rounded-full bg-stone-100 text-stone-700 flex items-center justify-center transition-colors"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center transition-colors cursor-pointer active:scale-95"
             aria-label="Menu"
           >
             {mobileMenuOpen ? (
@@ -98,7 +100,7 @@ export default function Header({ onOpenOrderModal }: HeaderProps) {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between p-3 rounded-xl bg-stone-50 font-bold text-xs text-brand-charcoal hover:bg-brand-purple/5"
+                className="flex items-center justify-between min-h-[44px] px-3.5 py-3 rounded-xl bg-stone-50 font-bold text-xs text-brand-charcoal hover:bg-brand-purple/5 active:bg-brand-purple/10 transition-colors"
               >
                 <span>{link.label}</span>
                 <ArrowRight className="w-3.5 h-3.5 text-brand-purple" strokeWidth={2} />
@@ -108,11 +110,12 @@ export default function Header({ onOpenOrderModal }: HeaderProps) {
 
           <div className="pt-2 border-t border-stone-100">
             <button
+              type="button"
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenOrderModal();
               }}
-              className="w-full py-3.5 px-4 rounded-xl bg-brand-purple text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
+              className="w-full min-h-[48px] py-3.5 px-4 rounded-xl bg-brand-purple hover:bg-brand-purple/95 active:scale-[0.99] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm cursor-pointer transition-all"
             >
               <span>{content.mobileCta}</span>
               <ArrowRight className="w-4 h-4" />

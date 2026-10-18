@@ -49,8 +49,9 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
           {/* Bouton d'action principal */}
           <div className="space-y-2.5 pt-1">
             <button
+              type="button"
               onClick={onOpenOrderModal}
-              className="w-full min-h-[52px] py-4 px-6 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-base font-bold shadow-lg shadow-brand-purple/25 transition-all duration-200 active:scale-98 flex items-center justify-center gap-3"
+              className="w-full min-h-[52px] py-4 px-6 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-base font-bold shadow-lg shadow-brand-purple/25 transition-all duration-200 active:scale-98 flex items-center justify-center gap-3 cursor-pointer"
             >
               <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
                 <Sparkles className="w-3.5 h-3.5 text-brand-gold" strokeWidth={2} />
@@ -101,8 +102,9 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
             {/* Bouton d'action */}
             <div className="pt-2 space-y-2">
               <button
+                type="button"
                 onClick={onOpenOrderModal}
-                className="py-4 px-8 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-base font-bold shadow-lg shadow-brand-purple/25 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-3"
+                className="min-h-[52px] py-4 px-8 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-base font-bold shadow-lg shadow-brand-purple/25 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-3 cursor-pointer"
               >
                 <Sparkles className="w-5 h-5 text-brand-gold" />
                 <span>{content.ctaButton}</span>

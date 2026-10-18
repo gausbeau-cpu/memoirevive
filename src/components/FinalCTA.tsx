@@ -33,8 +33,9 @@ export default function FinalCTA({ onOpenOrderModal }: FinalCTAProps) {
         {/* Bouton d'action CTA */}
         <div className="mt-8 flex flex-col items-center gap-4">
           <button
+            type="button"
             onClick={onOpenOrderModal}
-            className="w-full sm:w-auto min-h-[54px] px-8 py-4 rounded-full bg-brand-pink hover:bg-brand-pink/90 text-white text-base sm:text-lg font-bold shadow-lg shadow-brand-pink/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
+            className="w-full sm:w-auto min-h-[54px] px-8 py-4 rounded-full bg-brand-pink hover:bg-brand-pink/90 text-white text-base sm:text-lg font-bold shadow-lg shadow-brand-pink/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer"
           >
             <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
               <Sparkles className="w-3.5 h-3.5 text-brand-gold" strokeWidth={2} />

@@ -138,6 +138,18 @@ export default function OrderModal({
     }
   }, [initialPackage]);
 
+  // Fermeture par la touche Échap
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleResetAndClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
   // Chargement du brouillon local
   useEffect(() => {
     if (isOpen) {
@@ -304,40 +316,51 @@ export default function OrderModal({
   const firstName = nom.trim().split(" ")[0] || "ami(e)";
   const selectedOffer = getOfferById(selectedFormat) ?? OFFERS[1];
 
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-brand-charcoal/75 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          handleResetAndClose();
+        }
+      }}
+      className="fixed inset-0 z-50 overflow-y-auto bg-brand-charcoal/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all"
+    >
       <div
-        className="bg-brand-bg w-full sm:max-w-xl rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl border border-stone-200 overflow-hidden flex flex-col max-h-[96vh] sm:max-h-[90vh] animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-200"
+        className="bg-brand-bg w-full sm:max-w-xl h-[95dvh] sm:h-auto sm:max-h-[90vh] rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl border border-stone-200 overflow-hidden flex flex-col animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
       >
         {/* ================================================================= */}
         {/* Header du modal */}
         {/* ================================================================= */}
-        <div className="p-4 sm:p-5 border-b border-brand-border/70 flex items-center justify-between bg-white/95 sticky top-0 z-20 backdrop-blur-md">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-brand-purple/10 text-brand-purple flex items-center justify-center shadow-sm">
+        <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-brand-border/70 flex items-center justify-between bg-white/95 sticky top-0 z-20 backdrop-blur-md shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0 pr-2">
+            <div className="w-9 h-9 rounded-full bg-brand-purple/10 text-brand-purple flex items-center justify-center shadow-sm shrink-0">
               <Sparkles className="w-4 h-4 text-brand-purple" strokeWidth={2} />
             </div>
-            <div>
-              <h2 className="font-heading text-base sm:text-lg font-bold text-brand-charcoal leading-tight">
+            <div className="min-w-0">
+              <h2 className="font-heading text-base sm:text-lg font-bold text-brand-charcoal leading-tight truncate">
                 {modalState === "success"
                   ? content.success.title
                   : content.title}
               </h2>
-              <span className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" strokeWidth={2} />
+              <span className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1 truncate">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" strokeWidth={2} />
                 <span>{content.notice}</span>
               </span>
             </div>
           </div>
 
           <button
+            type="button"
             onClick={handleResetAndClose}
-            className="w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors"
-            aria-label="Fermer"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-stone-100 hover:bg-stone-200 active:scale-95 text-stone-700 hover:text-brand-charcoal flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-xs"
+            aria-label="Fermer la fenêtre de commande"
+            title="Fermer"
           >
-            <X className="w-5 h-5" strokeWidth={2} />
+            <X className="w-5 h-5" strokeWidth={2.5} />
           </button>
         </div>
 
@@ -397,7 +420,7 @@ export default function OrderModal({
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-brand-purple text-white font-semibold text-xs hover:bg-brand-purple/90 transition shadow-sm flex items-center justify-center gap-2"
+                  className="flex-1 min-h-[44px] py-2.5 px-4 rounded-xl bg-brand-purple text-white font-semibold text-xs hover:bg-brand-purple/90 transition shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   {content.error.retryButton}
@@ -405,17 +428,25 @@ export default function OrderModal({
                 <button
                   type="button"
                   onClick={() => setModalState("form")}
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs transition"
+                  className="flex-1 min-h-[44px] py-2.5 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs transition cursor-pointer"
                 >
                   {content.error.reviewButton}
                 </button>
               </div>
+
+              <button
+                type="button"
+                onClick={handleResetAndClose}
+                className="text-xs text-stone-500 hover:text-stone-800 underline py-2 cursor-pointer"
+              >
+                Fermer la fenêtre
+              </button>
             </div>
           )}
 
           {/* ÉTAT 3 : Succès */}
           {modalState === "success" && (
-            <div className="py-6 px-2 text-center flex flex-col items-center justify-center space-y-5">
+            <div className="py-6 px-4 sm:px-6 text-center flex flex-col items-center justify-center space-y-5">
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-inner">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
@@ -471,7 +502,7 @@ export default function OrderModal({
               </div>
 
               {/* Rappel promesse */}
-              <div className="bg-brand-purple/5 border border-brand-purple/20 rounded-2xl p-4 text-left">
+              <div className="bg-brand-purple/5 border border-brand-purple/20 rounded-2xl p-4 text-left w-full">
                 <p className="text-xs text-stone-700 leading-relaxed">
                   📱 <strong>Prochaine étape :</strong> {content.success.reminder}
                 </p>
@@ -485,7 +516,7 @@ export default function OrderModal({
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3.5 px-5 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
+                  className="w-full min-h-[50px] py-3.5 px-5 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.99] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <MessageCircle className="w-4 h-4 fill-white" />
                   <span>{content.success.whatsappButton}</span>
@@ -494,7 +525,7 @@ export default function OrderModal({
                 <button
                   type="button"
                   onClick={handleResetAndClose}
-                  className="w-full py-3 px-4 rounded-xl text-stone-600 hover:text-stone-800 font-semibold text-xs transition"
+                  className="w-full min-h-[48px] py-3.5 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 active:scale-[0.99] text-stone-700 hover:text-brand-charcoal font-semibold text-xs sm:text-sm transition-all cursor-pointer shadow-xs flex items-center justify-center"
                 >
                   {content.success.closeButton}
                 </button>
@@ -669,7 +700,7 @@ export default function OrderModal({
                       key={sug}
                       type="button"
                       onClick={() => handleSuggestionClick(sug)}
-                      className="text-[11px] px-2.5 py-1 rounded-full bg-stone-100 hover:bg-brand-purple/10 text-stone-700 hover:text-brand-purple transition border border-stone-200/80"
+                      className="text-xs px-3 py-1.5 min-h-[36px] rounded-full bg-stone-100 hover:bg-brand-purple/10 active:bg-brand-purple/20 text-stone-700 hover:text-brand-purple transition-colors border border-stone-200/80 cursor-pointer flex items-center"
                     >
                       « {sug} »
                     </button>
@@ -698,7 +729,7 @@ export default function OrderModal({
                 />
 
                 {/* Case à cocher "Je ne sais pas encore" */}
-                <label className="flex items-center gap-2 mt-2 cursor-pointer select-none">
+                <label className="flex items-center gap-2 mt-2 cursor-pointer select-none py-1">
                   <input
                     type="checkbox"
                     checked={laisserProposerTexte}
@@ -732,7 +763,7 @@ export default function OrderModal({
                         onClick={() =>
                           setEcheance((prev) => (prev === opt.id ? "" : opt.id))
                         }
-                        className={`py-2 px-2.5 rounded-xl text-xs font-semibold border transition text-center ${
+                        className={`min-h-[44px] py-2 px-2.5 rounded-xl text-xs font-semibold border transition text-center flex items-center justify-center cursor-pointer ${
                           isSelected
                             ? "bg-brand-purple text-white border-brand-purple shadow-sm"
                             : "bg-white text-stone-600 border-stone-200 hover:border-stone-300"
@@ -746,7 +777,7 @@ export default function OrderModal({
               </div>
 
               {/* 5. COORDONNÉES ET LIVRAISON À OUAGADOUGOU */}
-              <div className="space-y-3 pt-2 border-t border-stone-200">
+              <div className="space-y-3.5 pt-2 border-t border-stone-200">
                 <div>
                   <label className="text-xs font-bold text-brand-charcoal uppercase tracking-wider block mb-1">
                     {content.contact.nameLabel}
@@ -759,7 +790,7 @@ export default function OrderModal({
                       setValidationError(null);
                     }}
                     placeholder={content.contact.namePlaceholder}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
+                    className="w-full px-3.5 py-3 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
                   />
                 </div>
 
@@ -775,7 +806,7 @@ export default function OrderModal({
                       setValidationError(null);
                     }}
                     placeholder={content.contact.phonePlaceholder}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
+                    className="w-full px-3.5 py-3 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
                   />
                 </div>
 
@@ -791,7 +822,7 @@ export default function OrderModal({
                       setValidationError(null);
                     }}
                     placeholder={content.contact.neighborhoodPlaceholder}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
+                    className="w-full px-3.5 py-3 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
                   />
 
                   {/* Chips de sélection rapide des quartiers */}
@@ -801,9 +832,9 @@ export default function OrderModal({
                         key={q}
                         type="button"
                         onClick={() => handleNeighborhoodClick(q)}
-                        className={`text-[10px] px-2 py-0.5 rounded-full border transition ${
+                        className={`text-xs px-3 py-1.5 min-h-[34px] rounded-full border transition cursor-pointer flex items-center ${
                           quartier === q
-                            ? "bg-brand-purple text-white border-brand-purple"
+                            ? "bg-brand-purple text-white border-brand-purple font-bold shadow-xs"
                             : "bg-white text-stone-600 border-stone-200 hover:border-stone-300"
                         }`}
                       >
@@ -818,7 +849,7 @@ export default function OrderModal({
                   <button
                     type="button"
                     onClick={() => setShowLandmark(!showLandmark)}
-                    className="text-xs font-semibold text-brand-purple flex items-center gap-1 hover:underline"
+                    className="min-h-[36px] py-1 text-xs font-semibold text-brand-purple flex items-center gap-1 hover:underline cursor-pointer"
                   >
                     <span>{content.contact.landmarkToggle}</span>
                     {showLandmark ? (
@@ -834,18 +865,18 @@ export default function OrderModal({
                       value={adresseDetails}
                       onChange={(e) => setAdresseDetails(e.target.value)}
                       placeholder={content.contact.landmarkPlaceholder}
-                      className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-xs focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white mt-1.5 animate-in fade-in"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white mt-1.5 animate-in fade-in"
                     />
                   )}
                 </div>
               </div>
 
               {/* 6. BOUTON D'ACTION ET RÉASSURANCE */}
-              <div className="pt-2 sticky bottom-0 bg-brand-bg/95 backdrop-blur-sm pb-1">
+              <div className="-mx-4 px-4 sm:-mx-6 sm:px-6 pt-3 sticky bottom-0 bg-brand-bg/95 backdrop-blur-md pb-5 sm:pb-3 border-t border-stone-200/40 -mb-4 sm:-mb-6">
                 <button
                   type="submit"
                   disabled={isCompressing}
-                  className="w-full py-4 px-6 rounded-2xl bg-brand-purple hover:bg-brand-purple/95 text-white font-bold text-base shadow-lg shadow-brand-purple/25 transition-all flex items-center justify-center gap-2 active:scale-[0.99] disabled:opacity-50"
+                  className="w-full min-h-[52px] py-3.5 px-6 rounded-2xl bg-brand-purple hover:bg-brand-purple/95 active:scale-[0.99] text-white font-bold text-base shadow-lg shadow-brand-purple/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                 >
                   <span>{content.submitButton}</span>
                   <ArrowRight className="w-5 h-5" />

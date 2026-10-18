@@ -94,7 +94,7 @@ export default async function PublicPreviewPage({ params }: PageProps) {
             </a>
             <Link
               href="/"
-              className="inline-block text-xs font-semibold text-brand-purple hover:underline pt-2"
+              className="inline-flex items-center justify-center min-h-[44px] text-xs font-semibold text-brand-purple hover:underline pt-1"
             >
               {content.notFound.homeButton}
             </Link>
@@ -174,7 +174,7 @@ export default async function PublicPreviewPage({ params }: PageProps) {
 
   // 3. Cas : Aperçu prêt et disponible !
   return (
-    <main className="min-h-screen bg-brand-bg flex flex-col justify-between p-3.5 sm:p-6 selection:bg-brand-purple/20">
+    <main className="min-h-screen bg-brand-bg flex flex-col justify-between p-4 sm:p-6 selection:bg-brand-purple/20">
       <div className="max-w-md sm:max-w-lg w-full mx-auto py-3 sm:py-6 space-y-4 sm:space-y-5">
         {/* En-tête Marque */}
         <div className="flex items-center justify-between px-1">
@@ -257,7 +257,7 @@ export default async function PublicPreviewPage({ params }: PageProps) {
               href={whatsappRevisionUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-brand-purple transition-colors font-semibold py-1.5 px-3 rounded-full hover:bg-stone-100"
+              className="inline-flex items-center justify-center gap-1.5 min-h-[44px] text-xs text-stone-500 hover:text-brand-purple transition-colors font-semibold py-2 px-4 rounded-full hover:bg-stone-100"
             >
               <HelpCircle className="w-3.5 h-3.5" />
               <span>{content.ready.adjustButton}</span>

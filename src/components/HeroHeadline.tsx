@@ -31,7 +31,7 @@ export default function HeroHeadline({ className = "" }: HeroHeadlineProps) {
   return (
     <h1
       ref={containerRef}
-      className={`font-heading font-bold text-brand-charcoal tracking-tight text-[clamp(1.55rem,6.4vw,3.5rem)] leading-[1.2] overflow-visible ${className}`}
+      className={`font-heading font-bold text-brand-charcoal tracking-tight text-[clamp(1.35rem,6.2vw,3.5rem)] leading-[1.2] overflow-visible ${className}`}
     >
       {/* Texte complet pour les moteurs de recherche et les lecteurs d'écran */}
       <span className="sr-only">
@@ -94,7 +94,7 @@ export default function HeroHeadline({ className = "" }: HeroHeadlineProps) {
             return (
               <span
                 key={idx}
-                className="block font-heading text-brand-purple overflow-visible"
+                className="block font-heading text-brand-purple overflow-visible whitespace-nowrap"
                 style={{
                   gridArea: "1 / 1",
                   opacity,

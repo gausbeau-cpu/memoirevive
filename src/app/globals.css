@@ -14,6 +14,7 @@
   --dur-fast: 150ms;
   --dur-base: 300ms;
   --dur-slow: 600ms;
+  --color-liquid: #DB2777;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -173,5 +174,45 @@ button, a {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
+  }
+}
+
+/* ========================================================================= */
+/* Hero Showcase Zoom & Indicator Fill (Section 2.3 & 2.4)                   */
+/* ========================================================================= */
+@keyframes heroShowcaseZoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes showcaseIndicatorFill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.hero-showcase-zoom {
+  animation: heroShowcaseZoom 3200ms linear forwards;
+}
+
+.showcase-indicator-fill {
+  animation: showcaseIndicatorFill 3200ms linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-showcase-zoom {
+    animation: none !important;
+    transform: none !important;
+  }
+  .showcase-indicator-fill {
+    animation: none !important;
+    width: 100% !important;
   }
 }

@@ -3,6 +3,7 @@
 import React from "react";
 import { Sparkles, ArrowRight, ShieldCheck, CheckCircle2, Gift } from "lucide-react";
 import BeforeAfterSlider from "./BeforeAfterSlider";
+import HeroHeadline from "./HeroHeadline";
 import { SITE_CONTENT } from "@/content/site";
 
 interface HeroProps {
@@ -24,20 +25,20 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
         {/* ========================================================================= */}
         <div className="flex flex-col lg:hidden space-y-4 text-center">
           {/* Badge de confiance mobile */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-purple/10 border border-brand-purple/20 text-brand-purple text-xs font-bold mx-auto shadow-sm">
+          <div className="hero-stagger-item hero-stagger-1 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-purple/10 border border-brand-purple/20 text-brand-purple text-xs font-bold mx-auto shadow-sm">
             <div className="w-4 h-4 rounded-full bg-brand-purple text-white flex items-center justify-center">
               <Gift className="w-2.5 h-2.5" strokeWidth={2} />
             </div>
             <span>{content.mobileBadge}</span>
           </div>
 
-          {/* Titre Mobile */}
-          <h1 className="font-heading text-3xl sm:text-4xl leading-[1.15] font-bold text-brand-charcoal tracking-tight">
-            {content.title}
-          </h1>
+          {/* Titre Mobile à fin changeante */}
+          <div className="hero-stagger-item hero-stagger-2">
+            <HeroHeadline className="text-center" />
+          </div>
 
           {/* Sous-titre Mobile */}
-          <p className="text-base text-stone-600 leading-relaxed font-normal px-2">
+          <p className="hero-stagger-item hero-stagger-3 text-base text-stone-600 leading-relaxed font-normal px-2">
             {content.subtitle}
           </p>
 
@@ -51,7 +52,7 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
             <button
               type="button"
               onClick={onOpenOrderModal}
-              className="w-full min-h-[52px] py-4 px-6 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-base font-bold shadow-lg shadow-brand-purple/25 transition-all duration-200 active:scale-98 flex items-center justify-center gap-3 cursor-pointer"
+              className="hero-stagger-item hero-stagger-4 w-full min-h-[52px] py-4 px-6 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-base font-bold shadow-lg shadow-brand-purple/25 transition-all duration-200 active:scale-98 flex items-center justify-center gap-3 cursor-pointer"
             >
               <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
                 <Sparkles className="w-3.5 h-3.5 text-brand-gold" strokeWidth={2} />
@@ -61,7 +62,7 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
             </button>
 
             {/* Réassurance sous le bouton */}
-            <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 py-1.5 px-3 rounded-full mx-auto w-fit border border-emerald-200/60">
+            <div className="hero-stagger-item hero-stagger-5 flex items-center justify-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 py-1.5 px-3 rounded-full mx-auto w-fit border border-emerald-200/60">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" strokeWidth={2} />
               <span>{content.mobileReassurance}</span>
             </div>
@@ -74,23 +75,24 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
         <div className="hidden lg:grid lg:grid-cols-12 gap-12 items-center">
           {/* Colonne gauche (Texte + Bouton) */}
           <div className="lg:col-span-6 flex flex-col items-start space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-purple/10 border border-brand-purple/20 text-brand-purple text-xs font-bold shadow-sm">
+            <div className="hero-stagger-item hero-stagger-1 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-purple/10 border border-brand-purple/20 text-brand-purple text-xs font-bold shadow-sm">
               <div className="w-5 h-5 rounded-full bg-brand-purple text-white flex items-center justify-center">
                 <Gift className="w-3 h-3" strokeWidth={2} />
               </div>
               <span>{content.desktopBadge}</span>
             </div>
 
-            <h1 className="font-heading text-4xl xl:text-5xl leading-[1.15] font-bold text-brand-charcoal tracking-tight max-w-[90%]">
-              {content.title}
-            </h1>
+            {/* Titre Desktop à fin changeante */}
+            <div className="hero-stagger-item hero-stagger-2 w-full max-w-xl">
+              <HeroHeadline className="text-left" />
+            </div>
 
-            <p className="text-lg text-stone-600 leading-relaxed font-normal max-w-lg">
+            <p className="hero-stagger-item hero-stagger-3 text-lg text-stone-600 leading-relaxed font-normal max-w-lg">
               {content.subtitle}
             </p>
 
             {/* Bullets réassurance */}
-            <div className="grid grid-cols-2 gap-3 text-xs sm:text-sm text-brand-charcoal font-semibold w-full max-w-md">
+            <div className="hero-stagger-item hero-stagger-4 grid grid-cols-2 gap-3 text-xs sm:text-sm text-brand-charcoal font-semibold w-full max-w-md">
               {content.desktopArguments.map((arg, idx) => (
                 <div key={idx} className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -100,7 +102,7 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
             </div>
 
             {/* Bouton d'action */}
-            <div className="pt-2 space-y-2">
+            <div className="hero-stagger-item hero-stagger-5 pt-2 space-y-2">
               <button
                 type="button"
                 onClick={onOpenOrderModal}

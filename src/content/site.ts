@@ -45,6 +45,13 @@ export const SITE_CONTENT = {
   hero: {
     mobileBadge: "Le cadeau d’anniversaire à Ouagadougou",
     desktopBadge: "Le cadeau d’anniversaire personnalisé à Ouagadougou",
+    start: "Transforme ta plus belle photo en",
+    endings: [
+      "cadeau d’anniversaire",
+      "déclaration d’amour",
+      "surprise inoubliable",
+      "souvenir à offrir",
+    ],
     title: "Transforme ta plus belle photo en cadeau d’anniversaire",
     subtitle:
       "Envoie ta photo et ton message. Reçois l’aperçu gratuit sous 24 h, et ne paie que si ça te plaît.",

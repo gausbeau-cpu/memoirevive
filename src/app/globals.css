@@ -8,6 +8,20 @@
   --color-gold: #F59E0B;
   --color-bg: #FFFBF7;
   --color-charcoal: #1E1B2E;
+
+  /* Tokens de mouvement sobres (Section 3) */
+  --ease-out: cubic-bezier(.22,1,.36,1);
+  --dur-fast: 150ms;
+  --dur-base: 300ms;
+  --dur-slow: 600ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+  }
 }
 
 body {
@@ -121,4 +135,43 @@ button, a {
 .hero-progress-bar {
   animation: heroProgressBar 4.5s linear forwards;
   will-change: width;
+}
+
+/* ========================================================================= */
+/* Hero Cascade Entrance (Section 4.a)                                       */
+/* ========================================================================= */
+.hero-stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js .hero-stagger-item {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: heroCascadeFadeIn 400ms var(--ease-out) forwards;
+}
+
+@keyframes heroCascadeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.js .hero-stagger-1 { animation-delay: 0ms; }
+.js .hero-stagger-2 { animation-delay: 80ms; }
+.js .hero-stagger-3 { animation-delay: 160ms; }
+.js .hero-stagger-4 { animation-delay: 240ms; }
+.js .hero-stagger-5 { animation-delay: 320ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .hero-stagger-item {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
 }

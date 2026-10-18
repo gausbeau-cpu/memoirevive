@@ -48,6 +48,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${fraunces.variable} ${plusJakarta.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js');",
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col font-sans bg-brand-bg text-brand-charcoal antialiased selection:bg-brand-purple/20 selection:text-brand-purple">
         {children}
       </body>

@@ -17,6 +17,9 @@ const config: Config = {
           magenta: "#EC4899", // Rose / Magenta éclatant
           "magenta-hover": "#DB2777",
           "magenta-light": "#FCE7F3",
+          pink: "#EC4899",    // Rose / Magenta éclatant (alias brand-pink)
+          "pink-hover": "#DB2777",
+          "pink-light": "#FCE7F3",
           gold: "#F59E0B",    // Or / Ambre chaleureux
           "gold-hover": "#D97706",
           "gold-light": "#FEF3C7",

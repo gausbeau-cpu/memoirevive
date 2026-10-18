@@ -46,7 +46,7 @@ export default function PricingSection({ onSelectPackage }: PricingSectionProps)
                 {offer.badge && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap">
                     <span
-                      className={`text-xs font-bold px-4 py-1.5 rounded-full shadow-sm flex items-center gap-1.5 ${
+                      className={`text-xs font-bold px-4 py-1.5 rounded-full shadow-md flex items-center gap-1.5 border border-white/25 ${
                         isHighlight
                           ? "bg-brand-pink text-white"
                           : "bg-brand-gold text-white"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { SITE_CONTENT } from "@/content/site";
 import { useHeroCycle } from "@/hooks/useHeroCycle";
 
@@ -24,6 +24,19 @@ export default function HeroHeadline({ className = "" }: HeroHeadlineProps) {
 
   const containerRef = useRef<HTMLHeadingElement>(null);
 
+  // Avertissement en mode développement si une fin dépasse 24 caractères (Section 5)
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      endings.forEach((ending) => {
+        if (ending.length > 24) {
+          console.warn(
+            `[HeroHeadline] Fin trop longue (${ending.length} car., max recommandé 24) : "${ending}". Elle s'affichera sur deux lignes.`
+          );
+        }
+      });
+    }
+  }, [endings]);
+
   const activeHeadlineIdx = currentIndex % endings.length;
   const previousHeadlineIdx =
     previousIndex !== null ? previousIndex % endings.length : null;
@@ -33,7 +46,7 @@ export default function HeroHeadline({ className = "" }: HeroHeadlineProps) {
       ref={containerRef}
       className={`font-heading font-bold text-brand-charcoal tracking-tight text-[clamp(1.35rem,6.2vw,3.5rem)] leading-[1.2] overflow-visible ${className}`}
     >
-      {/* Texte complet pour les moteurs de recherche et les lecteurs d'écran */}
+      {/* 4.1 Texte complet masqué visuellement pour SEO et lecteurs d'écran */}
       <span className="sr-only">
         {start} {defaultEnding}
       </span>
@@ -50,7 +63,7 @@ export default function HeroHeadline({ className = "" }: HeroHeadlineProps) {
           {start}
         </span>
 
-        {/* Fin de phrase dynamique en grille CSS sans décalage de mise en page */}
+        {/* Fin de phrase dynamique en cellule unique de grille CSS sans décalage de mise en page */}
         <span
           className="block overflow-visible pt-1"
           style={{
@@ -71,36 +84,45 @@ export default function HeroHeadline({ className = "" }: HeroHeadlineProps) {
               isTransitioning && idx === activeHeadlineIdx;
 
             let opacity = 0;
-            let transform = "translateY(0.35em)";
+            let transform = "translateY(6px)";
             let transition = "none";
             let willChange = "auto";
+            let backfaceVisibility: "visible" | "hidden" = "visible";
 
             if (isDefaultFallback || isReducedStatic || isCurrentActive) {
+              // Netteté au repos : aucune transformation CSS au repos
               opacity = 1;
-              transform = "translateY(0)";
+              transform = "none";
+              willChange = "auto";
+              backfaceVisibility = "visible";
             } else if (isExiting) {
+              // Sortie : 1 -> 0 et 0 -> -6px en 350 ms, accélération ease-in
               opacity = 0;
-              transform = "translateY(-0.35em)";
+              transform = "translateY(-6px)";
               transition = "opacity 350ms ease-in, transform 350ms ease-in";
               willChange = "opacity, transform";
+              backfaceVisibility = "hidden";
             } else if (isEntering) {
+              // Entrée : 0 -> 1 et +6px -> 0 en 500 ms, cubic-bezier(.22,1,.36,1) avec 150 ms de délai
               opacity = 1;
-              transform = "translateY(0)";
+              transform = "translateY(0px)";
               transition =
                 "opacity 500ms cubic-bezier(.22,1,.36,1) 150ms, transform 500ms cubic-bezier(.22,1,.36,1) 150ms";
               willChange = "opacity, transform";
+              backfaceVisibility = "hidden";
             }
 
             return (
               <span
                 key={idx}
-                className="block font-heading text-brand-purple overflow-visible whitespace-nowrap"
+                className="block font-heading text-brand-purple overflow-visible"
                 style={{
                   gridArea: "1 / 1",
                   opacity,
                   transform,
                   transition,
                   willChange,
+                  backfaceVisibility,
                   color: "#7C3AED",
                 }}
               >

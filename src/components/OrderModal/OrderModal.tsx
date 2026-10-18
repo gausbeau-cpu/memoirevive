@@ -27,6 +27,7 @@ import {
 } from "@/content/offers";
 import { SITE_CONTENT, WHATSAPP_NUMBER } from "@/content/site";
 import { formatBurkinaWhatsAppPhone } from "@/lib/utils";
+import LiquidButton from "@/components/LiquidButton";
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -116,6 +117,12 @@ export default function OrderModal({
   const [validationError, setValidationError] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
   const [submittedOrderId, setSubmittedOrderId] = useState<string | null>(null);
+
+  // Jauge liquide du bouton d'envoi
+  const [gaugeStatus, setGaugeStatus] = useState<
+    "idle" | "uploading" | "submitting" | "success" | "error"
+  >("idle");
+  const [gaugeProgress, setGaugeProgress] = useState<number>(0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -220,7 +227,7 @@ export default function OrderModal({
     setValidationError(null);
   };
 
-  // Soumission
+  // Soumission avec suivi de la jauge liquide
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError(null);
@@ -254,7 +261,9 @@ export default function OrderModal({
       return;
     }
 
-    setModalState("submitting");
+    // Démarrage de la jauge liquide
+    setGaugeStatus("uploading");
+    setGaugeProgress(8);
 
     try {
       const formData = new FormData();
@@ -279,33 +288,72 @@ export default function OrderModal({
         formData.append("echeance", echeance);
       }
 
-      const res = await fetch("/api/commandes", {
-        method: "POST",
-        body: formData,
-      });
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/commandes");
 
-      const data = await res.json();
+      xhr.upload.onprogress = (evt) => {
+        if (evt.lengthComputable) {
+          const pct = Math.max(
+            8,
+            Math.min(99, Math.round((evt.loaded / evt.total) * 100))
+          );
+          setGaugeProgress(pct);
+        }
+      };
 
-      if (!res.ok || !data.success) {
-        throw new Error(
-          data.error || "Impossible d’enregistrer ta commande. Réessaie."
-        );
-      }
+      xhr.upload.onload = () => {
+        setGaugeStatus("submitting");
+        setGaugeProgress(100);
+      };
 
-      setSubmittedOrderId(data.orderId || null);
-      clearOrderDraft();
-      setModalState("success");
+      xhr.onload = () => {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 300 && data.success) {
+            setGaugeStatus("success");
+            setGaugeProgress(100);
+            setSubmittedOrderId(data.orderId || null);
+            clearOrderDraft();
+            // Transition vers l'écran de succès existant après perception du badge ✓
+            setTimeout(() => {
+              setModalState("success");
+            }, 800);
+          } else {
+            throw new Error(
+              data.error || "Impossible d’enregistrer ta commande. Réessaie."
+            );
+          }
+        } catch (err: unknown) {
+          console.error("Erreur soumission commande:", err);
+          const message =
+            err instanceof Error ? err.message : "Erreur inattendue.";
+          setGaugeStatus("error");
+          setGaugeProgress(0);
+          setServerError(message);
+        }
+      };
+
+      xhr.onerror = () => {
+        setGaugeStatus("error");
+        setGaugeProgress(0);
+        setServerError("Erreur réseau. Vérifie ta connexion et réessaie.");
+      };
+
+      xhr.send(formData);
     } catch (err: unknown) {
-      console.error("Erreur soumission commande:", err);
+      console.error("Erreur préparation commande:", err);
       const message =
         err instanceof Error ? err.message : "Erreur inattendue.";
+      setGaugeStatus("error");
+      setGaugeProgress(0);
       setServerError(message);
-      setModalState("error");
     }
   };
 
   const handleResetAndClose = () => {
     setModalState("form");
+    setGaugeStatus("idle");
+    setGaugeProgress(0);
     setPhotoFile(null);
     setPhotoPreview(null);
     setValidationError(null);
@@ -403,35 +451,40 @@ export default function OrderModal({
                 <p className="text-xs font-semibold text-emerald-950">
                   📱 Passe ta commande directement à l’équipe sur WhatsApp :
                 </p>
-                <a
+                <LiquidButton
+                  as="a"
+                  variant="whatsapp"
                   href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
                     `Bonjour Mémoire Vive, je souhaite commander mon tableau d’anniversaire :\n- Format : ${selectedOffer.name} (${selectedOffer.format} - ${formatOfferPrice(selectedOffer.price)})\n- Nom : ${nom.trim()}\n- Quartier : ${quartier.trim()}\n- Message sur la photo : ${texteAEcrire.trim() || "À me proposer"}\n- Téléphone : ${telephone.trim()}\n\n(Je vous joins ma photo originale)`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition active:scale-[0.98]"
+                  className="w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
                 >
                   <MessageCircle className="w-4 h-4 fill-white" />
                   <span>Envoyer ma commande sur WhatsApp</span>
-                </a>
+                </LiquidButton>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-2.5 pt-1 w-full max-w-xs">
-                <button
-                  type="button"
+                <LiquidButton
+                  variant="primary"
                   onClick={handleSubmit}
-                  className="flex-1 min-h-[44px] py-2.5 px-4 rounded-xl bg-brand-purple text-white font-semibold text-xs hover:bg-brand-purple/90 transition shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 min-h-[44px] py-2.5 px-4 rounded-xl font-semibold text-xs flex items-center justify-center gap-2"
                 >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  {content.error.retryButton}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setModalState("form")}
-                  className="flex-1 min-h-[44px] py-2.5 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs transition cursor-pointer"
+                  <RefreshCw className="w-3.5 h-3.5 text-white" />
+                  <span>{content.error.retryButton}</span>
+                </LiquidButton>
+                <LiquidButton
+                  variant="secondary"
+                  onClick={() => {
+                    setModalState("form");
+                    setGaugeStatus("idle");
+                  }}
+                  className="flex-1 min-h-[44px] py-2.5 px-4 rounded-xl font-semibold text-xs flex items-center justify-center"
                 >
-                  {content.error.reviewButton}
-                </button>
+                  <span>{content.error.reviewButton}</span>
+                </LiquidButton>
               </div>
 
               <button
@@ -510,25 +563,27 @@ export default function OrderModal({
 
               {/* Bouton WhatsApp */}
               <div className="w-full space-y-2.5 pt-2">
-                <a
+                <LiquidButton
+                  as="a"
+                  variant="whatsapp"
                   href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
                     content.success.whatsappMessage(nom.trim())
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full min-h-[50px] py-3.5 px-5 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.99] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full min-h-[50px] py-3.5 px-5 rounded-2xl font-bold text-sm shadow-md flex items-center justify-center gap-2"
                 >
                   <MessageCircle className="w-4 h-4 fill-white" />
                   <span>{content.success.whatsappButton}</span>
-                </a>
+                </LiquidButton>
 
-                <button
-                  type="button"
+                <LiquidButton
+                  variant="secondary"
                   onClick={handleResetAndClose}
-                  className="w-full min-h-[48px] py-3.5 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 active:scale-[0.99] text-stone-700 hover:text-brand-charcoal font-semibold text-xs sm:text-sm transition-all cursor-pointer shadow-xs flex items-center justify-center"
+                  className="w-full min-h-[48px] py-3.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center justify-center"
                 >
-                  {content.success.closeButton}
-                </button>
+                  <span>{content.success.closeButton}</span>
+                </LiquidButton>
               </div>
             </div>
           )}
@@ -873,14 +928,25 @@ export default function OrderModal({
 
               {/* 6. BOUTON D'ACTION ET RÉASSURANCE */}
               <div className="-mx-4 px-4 sm:-mx-6 sm:px-6 pt-3 sticky bottom-0 bg-brand-bg/95 backdrop-blur-md pb-5 sm:pb-3 border-t border-stone-200/40 -mb-4 sm:-mb-6">
-                <button
+                {serverError && (
+                  <div className="mb-2.5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5 animate-in fade-in">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                    <span>{serverError}</span>
+                  </div>
+                )}
+
+                <LiquidButton
                   type="submit"
-                  disabled={isCompressing}
-                  className="w-full min-h-[52px] py-3.5 px-6 rounded-2xl bg-brand-purple hover:bg-brand-purple/95 active:scale-[0.99] text-white font-bold text-base shadow-lg shadow-brand-purple/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                  variant="primary"
+                  disabled={isCompressing || gaugeStatus === "uploading" || gaugeStatus === "submitting"}
+                  isGauge={true}
+                  gaugeStatus={gaugeStatus}
+                  gaugeProgress={gaugeProgress}
+                  className="w-full min-h-[52px] py-3.5 px-6 rounded-2xl font-bold text-base shadow-lg shadow-brand-purple/25 flex items-center justify-center gap-2"
                 >
                   <span>{content.submitButton}</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
+                  <ArrowRight className="w-5 h-5 text-white" />
+                </LiquidButton>
 
                 <div className="flex items-center justify-center gap-3 text-[11px] text-stone-500 font-medium text-center mt-2.5">
                   <span className="flex items-center gap-1 text-emerald-700">

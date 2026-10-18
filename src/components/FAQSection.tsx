@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ChevronDown, MessageCircle } from "lucide-react";
+import LiquidButton from "@/components/LiquidButton";
 import { SITE_CONTENT, WHATSAPP_NUMBER } from "@/content/site";
 
 export default function FAQSection() {
@@ -81,15 +82,16 @@ export default function FAQSection() {
               {content.contactBlock.subtitle}
             </p>
           </div>
-          <a
+          <LiquidButton
+            as="a"
+            variant="whatsapp"
             href={whatsappHref}
             target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold shadow-sm transition active:scale-[0.98] shrink-0"
+            className="flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-full text-xs font-bold shrink-0"
           >
             <MessageCircle className="w-4 h-4 fill-white" />
             <span>{content.contactBlock.buttonText}</span>
-          </a>
+          </LiquidButton>
         </div>
       </div>
     </section>

@@ -12,6 +12,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import Logo from "@/components/Logo";
+import LiquidButton from "@/components/LiquidButton";
 import { getPublicPreviewByToken } from "@/lib/supabase-db";
 import { SITE_CONTENT, WHATSAPP_NUMBER } from "@/content/site";
 
@@ -81,17 +82,19 @@ export default async function PublicPreviewPage({ params }: PageProps) {
             {content.notFound.message}
           </p>
           <div className="pt-2 space-y-2">
-            <a
+            <LiquidButton
+              as="a"
+              variant="whatsapp"
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
                 "Bonjour Mémoire Vive, j’ai une question sur mon lien d’aperçu."
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full min-h-[44px] py-2.5 px-4 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full min-h-[44px] py-2.5 px-4 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
             >
-              <MessageCircle className="w-4 h-4" />
+              <MessageCircle className="w-4 h-4 text-white" />
               <span>{content.notFound.whatsappButton}</span>
-            </a>
+            </LiquidButton>
             <Link
               href="/"
               className="inline-flex items-center justify-center min-h-[44px] text-xs font-semibold text-brand-purple hover:underline pt-1"
@@ -149,17 +152,19 @@ export default async function PublicPreviewPage({ params }: PageProps) {
             </div>
 
             <div className="pt-2">
-              <a
+              <LiquidButton
+                as="a"
+                variant="whatsapp"
                 href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
                   `Bonjour Mémoire Vive, je suis ${data.clientNom} et je voulais prendre des nouvelles de mon aperçu.`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full min-h-[46px] py-3 px-5 rounded-full bg-stone-100 hover:bg-stone-200 text-brand-charcoal font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors"
+                className="w-full min-h-[46px] py-3 px-5 rounded-full font-semibold text-xs sm:text-sm flex items-center justify-center gap-2"
               >
-                <MessageCircle className="w-4 h-4 text-emerald-600" />
+                <MessageCircle className="w-4 h-4 text-white" />
                 <span>{content.pending.whatsappButton}</span>
-              </a>
+              </LiquidButton>
             </div>
           </div>
         </div>
@@ -241,15 +246,17 @@ export default async function PublicPreviewPage({ params }: PageProps) {
         {/* Boutons d'action WhatsApp */}
         <div className="space-y-3 pt-1">
           {/* Bouton de validation principal */}
-          <a
+          <LiquidButton
+            as="a"
+            variant="primary"
             href={whatsappValidateUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full min-h-[54px] py-4 px-6 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white font-bold text-sm sm:text-base shadow-lg shadow-brand-purple/25 flex items-center justify-center gap-2.5 transition-all hover:scale-[1.01] active:scale-[0.99]"
+            className="w-full min-h-[54px] py-4 px-6 rounded-full font-bold text-sm sm:text-base shadow-lg shadow-brand-purple/25 flex items-center justify-center gap-2.5"
           >
             <span>{content.ready.validateButton}</span>
-            <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
-          </a>
+            <ChevronRight className="w-5 h-5 text-white" strokeWidth={2.5} />
+          </LiquidButton>
 
           {/* Lien secondaire de révision */}
           <div className="text-center">

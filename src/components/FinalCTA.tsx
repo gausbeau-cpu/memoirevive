@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
+import LiquidButton from "@/components/LiquidButton";
 import { SITE_CONTENT } from "@/content/site";
 
 interface FinalCTAProps {
@@ -30,19 +31,19 @@ export default function FinalCTA({ onOpenOrderModal }: FinalCTAProps) {
           {content.subtitle}
         </p>
 
-        {/* Bouton d'action CTA */}
+        {/* Bouton d'action CTA Liquide */}
         <div className="mt-8 flex flex-col items-center gap-4">
-          <button
-            type="button"
+          <LiquidButton
+            variant="primary"
             onClick={onOpenOrderModal}
-            className="w-full sm:w-auto min-h-[54px] px-8 py-4 rounded-full bg-brand-pink hover:bg-brand-pink/90 text-white text-base sm:text-lg font-bold shadow-lg shadow-brand-pink/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer"
+            className="w-full sm:w-auto min-h-[54px] px-8 py-4 rounded-full text-base sm:text-lg font-bold flex items-center justify-center gap-3"
           >
             <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
               <Sparkles className="w-3.5 h-3.5 text-brand-gold" strokeWidth={2} />
             </div>
             <span>{content.buttonText}</span>
             <ArrowRight className="w-5 h-5" strokeWidth={2} />
-          </button>
+          </LiquidButton>
 
           <div className="flex items-center gap-2 text-xs text-white/85">
             <ShieldCheck className="w-4 h-4 text-emerald-300" strokeWidth={2} />

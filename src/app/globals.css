@@ -216,3 +216,44 @@ button, a {
     width: 100% !important;
   }
 }
+
+/* ========================================================================= */
+/* Liquid Button & Gauge Animations (Section 4.3 & 4.6)                      */
+/* ========================================================================= */
+@keyframes liquidExpand {
+  0% {
+    transform: scale(0) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(25deg);
+  }
+}
+
+.liquid-blob-expand {
+  animation: liquidExpand 650ms cubic-bezier(.22,1,.36,1) forwards;
+  will-change: transform;
+}
+
+@keyframes liquidWave {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.liquid-wave-anim {
+  animation: liquidWave 1.2s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-blob-expand {
+    animation: none !important;
+  }
+  .liquid-wave-anim {
+    animation: none !important;
+  }
+}
+

@@ -4,6 +4,7 @@ import React from "react";
 import { Sparkles, ArrowRight, ShieldCheck, CheckCircle2, Gift } from "lucide-react";
 import HeroHeadline from "./HeroHeadline";
 import HeroShowcase from "./HeroShowcase";
+import LiquidButton from "@/components/LiquidButton";
 import { HeroCycleProvider } from "@/context/HeroCycleContext";
 import { SITE_CONTENT } from "@/content/site";
 
@@ -51,17 +52,17 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
 
             {/* Bouton d'action principal */}
             <div className="space-y-2.5 pt-1">
-              <button
-                type="button"
+              <LiquidButton
+                variant="primary"
                 onClick={onOpenOrderModal}
-                className="hero-stagger-item hero-stagger-4 w-full min-h-[52px] py-4 px-6 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-base font-bold shadow-lg shadow-brand-purple/25 transition-all duration-200 active:scale-98 flex items-center justify-center gap-3 cursor-pointer"
+                className="hero-stagger-item hero-stagger-4 w-full min-h-[52px] py-4 px-6 rounded-full text-base font-bold flex items-center justify-center gap-3"
               >
                 <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
                   <Sparkles className="w-3.5 h-3.5 text-brand-gold" strokeWidth={2} />
                 </div>
                 <span>{content.ctaButton}</span>
                 <ArrowRight className="w-5 h-5" strokeWidth={2} />
-              </button>
+              </LiquidButton>
 
               {/* Réassurance sous le bouton */}
               <div className="hero-stagger-item hero-stagger-5 flex items-center justify-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 py-1.5 px-3 rounded-full mx-auto w-fit border border-emerald-200/60">
@@ -105,15 +106,15 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
 
               {/* Bouton d'action */}
               <div className="hero-stagger-item hero-stagger-5 pt-2 space-y-2">
-                <button
-                  type="button"
+                <LiquidButton
+                  variant="primary"
                   onClick={onOpenOrderModal}
-                  className="min-h-[52px] py-4 px-8 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-base font-bold shadow-lg shadow-brand-purple/25 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-3 cursor-pointer"
+                  className="min-h-[52px] py-4 px-8 rounded-full text-base font-bold flex items-center gap-3"
                 >
                   <Sparkles className="w-5 h-5 text-brand-gold" />
                   <span>{content.ctaButton}</span>
                   <ArrowRight className="w-5 h-5" />
-                </button>
+                </LiquidButton>
 
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-800">
                   <ShieldCheck className="w-4 h-4 text-emerald-600" />

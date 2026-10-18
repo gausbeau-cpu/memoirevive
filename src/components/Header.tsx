@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { MessageCircle, Menu, X, ArrowRight, ShieldCheck } from "lucide-react";
 import Logo from "@/components/Logo";
+import LiquidButton from "@/components/LiquidButton";
 import { SITE_CONTENT, WHATSAPP_NUMBER } from "@/content/site";
 
 interface HeaderProps {
@@ -38,43 +39,46 @@ export default function Header({ onOpenOrderModal }: HeaderProps) {
 
         {/* Actions Desktop */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Bouton WhatsApp */}
-          <a
+          {/* Bouton WhatsApp Liquide */}
+          <LiquidButton
+            as="a"
+            variant="whatsapp"
             href={whatsappHref}
             target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all active:scale-[0.98]"
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold"
           >
-            <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center">
-              <MessageCircle className="w-3 h-3 text-emerald-700" strokeWidth={2} />
+            <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+              <MessageCircle className="w-3 h-3 text-white fill-white" />
             </div>
             <span>{content.helpButton}</span>
-          </a>
+          </LiquidButton>
 
-          {/* CTA Principal */}
-          <button
-            type="button"
+          {/* CTA Principal Liquide */}
+          <LiquidButton
+            variant="primary"
             onClick={() => onOpenOrderModal()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-purple hover:bg-brand-purple/95 text-white text-xs font-bold shadow-md shadow-brand-purple/20 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold"
           >
             <span>{content.ctaButton}</span>
             <span className="bg-brand-pink text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
               {content.ctaBadge}
             </span>
-          </button>
+          </LiquidButton>
         </div>
 
         {/* Actions Mobiles */}
         <div className="flex md:hidden items-center gap-2">
-          <a
+          {/* Bouton WhatsApp Mobile Liquide */}
+          <LiquidButton
+            as="a"
+            variant="whatsapp"
             href={whatsappHref}
             target="_blank"
-            rel="noopener noreferrer"
-            className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 active:scale-95 transition-transform"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center p-0"
             aria-label="Contacter sur WhatsApp"
           >
-            <MessageCircle className="w-5 h-5 text-emerald-600" strokeWidth={2} />
-          </a>
+            <MessageCircle className="w-5 h-5 text-white fill-white" />
+          </LiquidButton>
 
           <button
             type="button"
@@ -109,17 +113,17 @@ export default function Header({ onOpenOrderModal }: HeaderProps) {
           </nav>
 
           <div className="pt-2 border-t border-stone-100">
-            <button
-              type="button"
+            <LiquidButton
+              variant="primary"
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenOrderModal();
               }}
-              className="w-full min-h-[48px] py-3.5 px-4 rounded-xl bg-brand-purple hover:bg-brand-purple/95 active:scale-[0.99] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm cursor-pointer transition-all"
+              className="w-full min-h-[48px] py-3.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
             >
               <span>{content.mobileCta}</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </LiquidButton>
           </div>
         </div>
       )}

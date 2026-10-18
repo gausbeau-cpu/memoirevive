@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, Sparkles, AlertCircle, ArrowRight, ShieldCheck } from "lucide-react";
+import Logo from "@/components/Logo";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -67,10 +68,10 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md relative z-10">
         {/* Card Container */}
         <div className="bg-[#241B2E] border border-purple-500/20 rounded-3xl p-7 sm:p-9 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
-          {/* Discrete Logo Header */}
-          <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-purple to-brand-magenta flex items-center justify-center text-white mx-auto shadow-[0_0_20px_rgba(124,58,237,0.4)] mb-4">
-              <Sparkles className="w-6 h-6 text-brand-gold" strokeWidth={2} />
+          {/* Logo officiel Mémoire Vive dans pastille claire arrondie */}
+          <div className="text-center mb-8 flex flex-col items-center">
+            <div className="mb-4">
+              <Logo size="md" variant="on-dark" href={null} />
             </div>
             <h1 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F0FA] tracking-tight">
               Studio Workspace

@@ -16,8 +16,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-stone-800">
           {/* Logo et présentation */}
           <div className="md:col-span-2 space-y-3">
-            <div className="[&_span]:text-white [&_span.text-stone-500]:text-stone-400">
-              <Logo size="md" />
+            <div>
+              <Logo size="md" variant="on-dark" className="-ml-4 sm:-ml-5" />
             </div>
             <p className="text-stone-400 text-xs sm:text-sm max-w-sm leading-relaxed">
               {content.description}

@@ -21,8 +21,8 @@ export default function Header({ onOpenOrderModal }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 bg-brand-bg/95 backdrop-blur-md border-b border-brand-border/70 transition-all">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
-        {/* Logo typographique minimaliste */}
-        <Logo size="md" />
+        {/* Logo officiel Mémoire Vive */}
+        <Logo size="md" className="-ml-4 sm:-ml-5" />
 
         {/* Navigation Desktop */}
         <nav className="hidden lg:flex items-center gap-6">

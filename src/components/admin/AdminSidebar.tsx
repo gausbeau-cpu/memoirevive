@@ -11,6 +11,7 @@ import {
   LogOut,
   Sparkles,
   ExternalLink,
+  ShieldCheck,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -53,6 +54,11 @@ export default function AdminSidebar({
       label: "Clients",
       href: "/wendclass/clients",
       icon: Users,
+    },
+    {
+      label: "Sécurité & Accès",
+      href: "/wendclass/parametres",
+      icon: ShieldCheck,
     },
   ];
 

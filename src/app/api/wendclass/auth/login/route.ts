@@ -2,13 +2,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import {
   ADMIN_COOKIE_NAME,
-  DEFAULT_ADMIN_EMAIL,
-  DEFAULT_ADMIN_PASSWORD,
   checkRateLimit,
   recordFailedAttempt,
   clearRateLimit,
   createAdminSessionToken,
 } from "@/lib/admin-auth";
+import { getStoredAdminCredentials } from "@/lib/admin-credentials-storage";
 
 export async function POST(request: NextRequest) {
   // Récupérer l'adresse IP client pour le rate limiter
@@ -41,11 +40,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const expectedEmail = (process.env.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL)
-      .trim()
-      .toLowerCase();
-    const expectedPassword =
-      process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD;
+    const { email: expectedEmail, password: expectedPassword } =
+      getStoredAdminCredentials();
 
     const inputEmail = String(email).trim().toLowerCase();
     const inputPassword = String(password);

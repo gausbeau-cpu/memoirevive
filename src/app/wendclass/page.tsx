@@ -14,11 +14,14 @@ import {
   ArrowRight,
   Eye,
   RefreshCw,
+  KeyRound,
+  ShieldCheck,
 } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import StatCard from "@/components/admin/StatCard";
 import StatusBadge from "@/components/admin/StatusBadge";
 import OrdersChart from "@/components/admin/OrdersChart";
+import ChangePasswordModal from "@/components/admin/ChangePasswordModal";
 import { formatPrice } from "@/lib/utils";
 import { AdminOrder } from "@/lib/admin-db";
 
@@ -26,6 +29,7 @@ export default function AdminDashboardPage() {
 
   const [statsData, setStatsData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   const fetchStats = async () => {
     try {
@@ -52,16 +56,26 @@ export default function AdminDashboardPage() {
         title="Tableau de bord"
         subtitle="Aperçu des performances, encaissements et commandes en cours"
         actions={
-          <button
-            onClick={fetchStats}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#241B2E] border border-purple-500/20 text-xs font-semibold text-stone-300 hover:text-white transition-colors"
-            title="Actualiser les données"
-          >
-            <RefreshCw
-              className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`}
-            />
-            <span className="hidden sm:inline">Actualiser</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsPasswordModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-purple/20 border border-brand-purple/40 text-xs font-semibold text-purple-200 hover:text-white hover:bg-brand-purple/30 transition-colors"
+              title="Modifier le code de connexion"
+            >
+              <KeyRound className="w-3.5 h-3.5 text-brand-purple" />
+              <span>Modifier le code</span>
+            </button>
+            <button
+              onClick={fetchStats}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#241B2E] border border-purple-500/20 text-xs font-semibold text-stone-300 hover:text-white transition-colors"
+              title="Actualiser les données"
+            >
+              <RefreshCw
+                className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`}
+              />
+              <span className="hidden sm:inline">Actualiser</span>
+            </button>
+          </div>
         }
       />
 
@@ -264,6 +278,41 @@ export default function AdminDashboardPage() {
           <OrdersChart data={statsData?.chartData || []} />
         </div>
 
+        {/* Carte Accès & Sécurité */}
+        <div className="bg-[#241B2E] border border-purple-500/20 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-[0_4px_25px_rgba(0,0,0,0.3)]">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 min-w-[44px] rounded-2xl bg-brand-purple/20 border border-brand-purple/30 text-brand-purple flex items-center justify-center">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="font-heading font-bold text-base text-white">
+                Code de connexion & Sécurité du Studio
+              </h3>
+              <p className="text-xs text-stone-400 mt-0.5">
+                Accès administrateur configuré pour wendclasss@gmail.com
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => setIsPasswordModalOpen(true)}
+              className="flex-1 sm:flex-none min-h-[44px] px-4 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-purple-hover text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-sm cursor-pointer"
+            >
+              <KeyRound className="w-4 h-4" />
+              <span>Modifier le code</span>
+            </button>
+            <Link
+              href="/wendclass/parametres"
+              className="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-white/10"
+            >
+              <span>Paramètres</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+
         {/* 5 Most Recent Orders */}
         <div className="bg-[#241B2E] rounded-3xl p-5 sm:p-7 border border-purple-500/15 shadow-[0_4px_25px_rgba(0,0,0,0.3)]">
           <div className="flex items-center justify-between mb-5">
@@ -422,6 +471,11 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </main>
+
+      <ChangePasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+      />
     </div>
   );
 }

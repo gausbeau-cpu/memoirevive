@@ -11,6 +11,7 @@ export interface LogoProps {
   // Conservé pour compatibilité ascendante d'appels existants
   showTagline?: boolean;
   monogramOnly?: boolean;
+  mobileWithoutBaseline?: boolean;
 }
 
 export default function Logo({
@@ -20,6 +21,7 @@ export default function Logo({
   onDark = false,
   href = "/",
   monogramOnly = false,
+  mobileWithoutBaseline = false,
 }: LogoProps) {
   const isDark = variant === "on-dark" || onDark;
 
@@ -36,25 +38,54 @@ export default function Logo({
     ? "/brand/memoire-vive-logo-white.webp"
     : "/brand/memoire-vive-logo.webp";
 
-  const content = monogramOnly ? (
-    <Image
-      src="/brand/memoire-vive-icon.webp"
-      alt="Mémoire Vive"
-      width={260}
-      height={239}
-      priority
-      className="h-[34px] sm:h-[40px] w-auto object-contain select-none"
-    />
-  ) : (
-    <Image
-      src={logoSrc}
-      alt="Mémoire Vive"
-      width={1025}
-      height={239}
-      priority
-      className={`${imgSizes[size]} object-contain select-none`}
-    />
-  );
+  let content: React.ReactNode;
+
+  if (monogramOnly) {
+    content = (
+      <Image
+        src="/brand/memoire-vive-icon.webp"
+        alt="Mémoire Vive"
+        width={260}
+        height={239}
+        priority
+        className="h-[34px] sm:h-[40px] w-auto object-contain select-none"
+      />
+    );
+  } else if (mobileWithoutBaseline && !isDark) {
+    content = (
+      <>
+        {/* Version principale sans baseline sur mobile (< md) pour visibilité maximale */}
+        <Image
+          src="/brand/memoire-vive-logo-principal.webp"
+          alt="Mémoire Vive"
+          width={1025}
+          height={239}
+          priority
+          className={`${imgSizes[size]} md:hidden object-contain select-none`}
+        />
+        {/* Version complète avec baseline sur écran large (>= md) */}
+        <Image
+          src="/brand/memoire-vive-logo.webp"
+          alt="Mémoire Vive"
+          width={1025}
+          height={239}
+          priority
+          className={`${imgSizes[size]} hidden md:block object-contain select-none`}
+        />
+      </>
+    );
+  } else {
+    content = (
+      <Image
+        src={logoSrc}
+        alt="Mémoire Vive"
+        width={1025}
+        height={239}
+        priority
+        className={`${imgSizes[size]} object-contain select-none`}
+      />
+    );
+  }
 
   const containerClasses = `min-h-[44px] py-1 px-4 sm:px-5 inline-flex items-center justify-center transition-opacity hover:opacity-95 ${className}`;
 

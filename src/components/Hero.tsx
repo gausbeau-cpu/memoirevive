@@ -86,7 +86,7 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
               </div>
 
               {/* Titre Desktop à fin changeante */}
-              <div className="hero-stagger-item hero-stagger-2 w-full">
+              <div className="hero-stagger-item hero-stagger-2 w-full max-w-xl">
                 <HeroHeadline className="text-left" />
               </div>
 

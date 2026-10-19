@@ -21,8 +21,8 @@ export default function Header({ onOpenOrderModal }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 bg-brand-bg/95 backdrop-blur-md border-b border-brand-border/70 transition-all">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 md:h-[72px] flex items-center justify-between">
-        {/* Logo officiel Mémoire Vive */}
-        <Logo size="md" className="-ml-4 sm:-ml-5" />
+        {/* Logo officiel Mémoire Vive (sans baseline sur mobile pour visibilité maximale) */}
+        <Logo size="md" mobileWithoutBaseline className="-ml-4 sm:-ml-5" />
 
         {/* Navigation Desktop */}
         <nav className="hidden lg:flex items-center gap-6">
@@ -101,7 +101,7 @@ export default function Header({ onOpenOrderModal }: HeaderProps) {
           <div>
             {/* En-tête menu avec Logo et Bouton Fermer */}
             <div className="flex items-center justify-between pb-6 border-b border-brand-border/70">
-              <Logo size="md" className="-ml-3" />
+              <Logo size="md" mobileWithoutBaseline className="-ml-3" />
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}

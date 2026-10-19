@@ -28,7 +28,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-brand-bg relative pb-24 md:pb-0">
+    <div className="min-h-screen flex flex-col bg-brand-bg relative pb-28 pb-safe md:pb-0">
       {/* 1. Bandeau de réassurance supérieur */}
       <TrustBar />
 

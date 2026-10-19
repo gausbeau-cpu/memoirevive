@@ -7,17 +7,17 @@ export default function HowItWorks() {
   const icons = [Upload, Sparkles, PackageCheck];
 
   return (
-    <section id="comment-ca-marche" className="py-14 sm:py-20 bg-[#EDE9FE] relative">
+    <section id="comment-ca-marche" className="py-12 md:py-20 bg-[#EDE9FE] relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* En-tête de section */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-16">
           <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-brand-purple bg-white px-3.5 py-1.5 rounded-full shadow-sm">
             {content.badge}
           </span>
-          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-brand-charcoal mt-3">
+          <h2 className="font-heading text-fluid-h2 font-bold text-brand-charcoal mt-3">
             {content.title}
           </h2>
-          <p className="text-sm sm:text-base text-stone-600 mt-2">
+          <p className="text-base text-stone-600 mt-2">
             {content.subtitle}
           </p>
         </div>
@@ -47,17 +47,17 @@ export default function HowItWorks() {
                       <Icon className="w-6 h-6" strokeWidth={2} />
                     </div>
 
-                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-brand-purple text-white font-bold text-[11px] flex items-center justify-center shadow">
+                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-brand-purple text-white font-bold text-xs flex items-center justify-center shadow">
                       {step.number}
                     </span>
                   </div>
 
                   {/* Contenu textuel */}
-                  <div className="flex-1 pt-1 md:pt-2">
-                    <h3 className="font-heading text-base sm:text-lg font-bold text-brand-charcoal mb-1">
+                  <div className="flex-1 pt-1 md:pt-2 min-w-0">
+                    <h3 className="font-heading text-fluid-h3 font-bold text-brand-charcoal mb-1">
                       {step.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-xs md:mx-auto">
+                    <p className="text-base text-stone-600 leading-relaxed max-w-xs md:mx-auto">
                       {step.description}
                     </p>
                   </div>

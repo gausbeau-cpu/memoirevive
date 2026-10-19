@@ -11,13 +11,13 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="py-14 sm:py-24 relative bg-[#FFFBF7]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
+    <section className="py-12 md:py-20 relative bg-[#FFFBF7]">
+      <div className="max-w-site mx-auto px-4 sm:px-6">
+        <div className="text-center max-w-2xl mx-auto mb-8 md:mb-14">
           <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-brand-purple bg-brand-purple/10 px-3.5 py-1.5 rounded-full">
             {content.badge}
           </span>
-          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-brand-charcoal mt-3">
+          <h2 className="font-heading text-fluid-h2 text-brand-charcoal mt-3">
             {content.title}
           </h2>
         </div>

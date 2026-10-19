@@ -18,12 +18,12 @@ export default function PolitiqueDeConfidentialite() {
     <div className="min-h-screen flex flex-col bg-brand-bg text-brand-charcoal">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-brand-bg/95 backdrop-blur-md border-b border-brand-border/70">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div className="max-w-prose mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Logo size="sm" showTagline={false} />
 
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-brand-purple hover:underline transition-colors"
+            className="flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-brand-purple hover:underline transition-colors px-2 py-1"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Retour à l’accueil</span>
@@ -32,21 +32,21 @@ export default function PolitiqueDeConfidentialite() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-16">
-        <div className="bg-white rounded-[2rem] p-6 sm:p-12 border border-stone-200 shadow-sm">
+      <main className="flex-1 max-w-prose w-full mx-auto px-4 sm:px-6 py-8 sm:py-14">
+        <div className="bg-white rounded-[2rem] p-6 sm:p-10 border border-stone-200 shadow-sm">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-purple/10 text-brand-purple text-xs font-bold mb-4">
             <Shield className="w-3.5 h-3.5" />
             <span>Protection des données</span>
           </div>
 
-          <h1 className="font-heading text-3xl sm:text-4xl font-bold text-brand-charcoal mb-4">
+          <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-brand-charcoal mb-4">
             Politique de Confidentialité
           </h1>
-          <p className="text-sm text-stone-500 mb-8 pb-6 border-b border-stone-200">
+          <p className="text-xs sm:text-sm text-stone-500 mb-8 pb-6 border-b border-stone-200">
             Dernière mise à jour : {new Date().toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" })}
           </p>
 
-          <div className="space-y-6 text-sm sm:text-base text-stone-600 leading-relaxed">
+          <div className="space-y-6 text-base sm:text-lg text-stone-600 leading-relaxed">
             <section className="space-y-2">
               <h2 className="font-heading text-xl font-bold text-brand-charcoal">
                 1. Respect strict de la vie privée

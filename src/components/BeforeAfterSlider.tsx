@@ -111,7 +111,7 @@ export default function BeforeAfterSlider() {
                 setActiveSlotIndex(idx);
                 setSliderPosition(55);
               }}
-              className={`flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer active:scale-95 ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer active:scale-95 ${
                 isSelected
                   ? "bg-white text-brand-purple shadow-sm"
                   : "text-stone-600 hover:text-brand-charcoal"
@@ -124,12 +124,13 @@ export default function BeforeAfterSlider() {
         })}
       </div>
 
-      {/* Conteneur du comparateur interactif Avant / Tableau fini */}
+      {/* Conteneur du comparateur interactif Avant / Tableau fini (touch-action pan-y pour défilement fluide) */}
       <div
         ref={containerRef}
         onMouseDown={() => setIsDragging(true)}
         onTouchStart={() => setIsDragging(true)}
-        className="relative w-full aspect-[4/5] sm:aspect-[4/4] max-w-md rounded-3xl overflow-hidden shadow-2xl border-4 border-white cursor-ew-resize select-none bg-stone-100"
+        style={{ touchAction: "pan-y" }}
+        className="relative w-full aspect-[4/5] sm:aspect-[4/4] max-w-md rounded-3xl overflow-hidden shadow-2xl border-4 border-white cursor-ew-resize select-none bg-stone-100 touch-pan-y"
       >
         {/* Couche APRÈS : Tableau fini avec retouche et texte élégant */}
         <div className="absolute inset-0 w-full h-full">
@@ -142,7 +143,7 @@ export default function BeforeAfterSlider() {
 
           {/* Incrustation du message personnalisé sur le tableau fini */}
           <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/85 via-black/45 to-transparent text-white flex flex-col items-center text-center">
-            <span className="text-[10px] tracking-widest uppercase font-bold text-brand-gold bg-black/40 px-2.5 py-0.5 rounded-full backdrop-blur-sm mb-1.5">
+            <span className="text-xs tracking-widest uppercase font-bold text-brand-gold bg-black/40 px-2.5 py-0.5 rounded-full backdrop-blur-sm mb-1.5">
               Tirage sur panneau PVC
             </span>
             <p className="font-heading italic text-base sm:text-lg font-bold text-white drop-shadow-md max-w-xs">
@@ -150,7 +151,7 @@ export default function BeforeAfterSlider() {
             </p>
           </div>
 
-          <div className="absolute top-4 right-4 z-10 px-2.5 py-1 rounded-full bg-brand-purple text-white text-[11px] font-bold shadow-md">
+          <div className="absolute top-4 right-4 z-10 px-2.5 py-1 rounded-full bg-brand-purple text-white text-xs font-bold shadow-md">
             Tableau fini ✨
           </div>
         </div>
@@ -167,7 +168,7 @@ export default function BeforeAfterSlider() {
             className="w-full h-full object-cover filter brightness-90 saturate-75"
           />
 
-          <div className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold">
+          <div className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-sm text-white text-xs font-bold">
             Photo brute
           </div>
         </div>
@@ -187,7 +188,7 @@ export default function BeforeAfterSlider() {
       </div>
 
       {/* Légende sous le comparateur */}
-      <p className="text-[11px] text-stone-500 font-medium text-center mt-2.5 flex items-center gap-1.5">
+      <p className="text-xs text-stone-500 font-medium text-center mt-2.5 flex items-center gap-1.5">
         <Sparkles className="w-3.5 h-3.5 text-brand-purple" />
         <span>Fais glisser le curseur pour voir la transformation</span>
       </p>

@@ -14,22 +14,22 @@ export default function PricingSection({ onSelectPackage }: PricingSectionProps)
   const content = SITE_CONTENT.pricing;
 
   return (
-    <section id="formats" className="py-16 sm:py-24 bg-[#FFFBF7] relative">
+    <section id="formats" className="py-12 md:py-20 bg-[#FFFBF7] relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* En-tête de la section */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-16">
           <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-brand-purple bg-brand-purple/10 border border-brand-purple/20 px-3.5 py-1.5 rounded-full shadow-sm">
             {content.badge}
           </span>
-          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-brand-charcoal mt-3">
+          <h2 className="font-heading text-fluid-h2 font-bold text-brand-charcoal mt-3">
             {content.title}
           </h2>
-          <p className="text-sm sm:text-base text-stone-600 mt-2">
+          <p className="text-base text-stone-600 mt-2">
             {content.subtitle}
           </p>
         </div>
 
-        {/* Grille des 3 offres */}
+        {/* Grille des 3 offres : 1 colonne par défaut sur mobile, 3 colonnes à partir de lg: */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch pt-4">
           {OFFERS.map((offer: Offer) => {
             const isHighlight = offer.id === "format_40x60";
@@ -37,7 +37,7 @@ export default function PricingSection({ onSelectPackage }: PricingSectionProps)
             return (
               <div
                 key={offer.id}
-                className={`relative rounded-[2rem] p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 ${
+                className={`relative rounded-[2rem] p-5 sm:p-7 lg:p-8 flex flex-col justify-between transition-all duration-300 ${
                   isHighlight
                     ? "bg-white border-2 border-brand-purple shadow-xl shadow-brand-purple/10 ring-4 ring-brand-purple/10 lg:-translate-y-3 pt-10 sm:pt-11"
                     : "bg-white border border-stone-200 shadow-sm hover:shadow-md pt-8 sm:pt-9"
@@ -62,7 +62,7 @@ export default function PricingSection({ onSelectPackage }: PricingSectionProps)
                 {/* Contenu principal de la carte */}
                 <div>
                   <div className="text-center pb-4 border-b border-stone-100">
-                    <h3 className="font-heading text-xl font-bold text-brand-charcoal">
+                    <h3 className="font-heading text-fluid-h3 font-bold text-brand-charcoal">
                       {offer.name}
                     </h3>
                     <p className="text-xs font-semibold text-stone-500 mt-0.5">
@@ -73,11 +73,11 @@ export default function PricingSection({ onSelectPackage }: PricingSectionProps)
                     </p>
 
                     <div className="mt-4 flex items-baseline justify-center gap-1">
-                      <span className="font-heading text-3xl sm:text-4xl font-extrabold text-brand-charcoal tabular-nums">
+                      <span className="font-heading text-fluid-price font-extrabold text-brand-charcoal tabular-nums">
                         {formatOfferPrice(offer.price)}
                       </span>
                     </div>
-                    <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full mt-1.5 inline-block border border-emerald-200/60">
+                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full mt-1.5 inline-block border border-emerald-200/60">
                       0 FCFA d’avance · Paiement après accord
                     </span>
                   </div>
@@ -96,18 +96,18 @@ export default function PricingSection({ onSelectPackage }: PricingSectionProps)
                   </div>
                 </div>
 
-                {/* Bouton de sélection */}
+                {/* Bouton de sélection pleine largeur */}
                 <div className="pt-2">
                   <LiquidButton
                     variant={isHighlight ? "primary" : "secondary"}
                     onClick={() => onSelectPackage(offer.id)}
-                    className="w-full min-h-[48px] py-3.5 px-4 rounded-full font-bold text-sm"
+                    className="w-full min-h-[48px] py-3.5 px-4 rounded-full font-bold text-base"
                   >
                     <span>Choisir {offer.format}</span>
                     <ArrowRight className="w-4 h-4" />
                   </LiquidButton>
 
-                  <p className="text-[11px] text-stone-500 font-medium text-center mt-2 flex items-center justify-center gap-1">
+                  <p className="text-xs text-stone-500 font-medium text-center mt-2 flex items-center justify-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Aperçu gratuit avant paiement</span>
                   </p>

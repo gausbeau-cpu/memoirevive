@@ -13,7 +13,7 @@ export default function FinalCTA({ onOpenOrderModal }: FinalCTAProps) {
   const content = SITE_CONTENT.finalCta;
 
   return (
-    <section className="py-16 sm:py-24 bg-[#4C1D95] text-white relative">
+    <section className="py-12 md:py-20 bg-[#4C1D95] text-white relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 border border-white/25 text-brand-gold text-xs sm:text-sm font-semibold mb-6">
@@ -22,7 +22,7 @@ export default function FinalCTA({ onOpenOrderModal }: FinalCTAProps) {
         </div>
 
         {/* Titre (Fraunces) */}
-        <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white max-w-2xl mx-auto leading-tight">
+        <h2 className="font-heading text-fluid-h2 font-bold tracking-tight text-white max-w-2xl mx-auto leading-tight">
           {content.title}
         </h2>
 
@@ -31,12 +31,12 @@ export default function FinalCTA({ onOpenOrderModal }: FinalCTAProps) {
           {content.subtitle}
         </p>
 
-        {/* Bouton d'action CTA Liquide */}
-        <div className="mt-8 flex flex-col items-center gap-4">
+        {/* Bouton d'action CTA Liquide (pleine largeur sur mobile) */}
+        <div className="mt-8 flex flex-col items-center gap-4 w-full max-w-md mx-auto">
           <LiquidButton
             variant="primary"
             onClick={onOpenOrderModal}
-            className="w-full sm:w-auto min-h-[54px] px-8 py-4 rounded-full text-base sm:text-lg font-bold flex items-center justify-center gap-3"
+            className="w-full sm:w-auto min-h-[52px] px-8 py-4 rounded-full text-base sm:text-lg font-bold flex items-center justify-center gap-3 shadow-xl shadow-brand-purple/30"
           >
             <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
               <Sparkles className="w-3.5 h-3.5 text-brand-gold" strokeWidth={2} />

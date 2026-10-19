@@ -129,7 +129,7 @@ export default function AdminClientsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Rechercher par nom, téléphone (+226...), quartier..."
-                className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-2.5 pl-10 text-xs sm:text-sm text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+                className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-3 pl-10 min-h-[48px] text-base text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
               />
             </div>
 
@@ -153,10 +153,85 @@ export default function AdminClientsPage() {
 
         {/* Clients Table */}
         <div className="bg-[#241B2E] rounded-3xl border border-purple-500/15 shadow-[0_4px_25px_rgba(0,0,0,0.3)] overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Mobile Cards View (< 768px) */}
+          <div className="block md:hidden divide-y divide-white/5">
+            {filteredClients.length === 0 ? (
+              <div className="py-12 text-center text-stone-400 text-sm">
+                Aucun client trouvé.
+              </div>
+            ) : (
+              filteredClients.map((client) => {
+                const cleanPhone = client.telephone.replace(/[^0-9]/g, "");
+                const whatsappUrl = `https://wa.me/${cleanPhone}`;
+                return (
+                  <div
+                    key={client.telephone}
+                    className="p-4 space-y-3 bg-[#241B2E]"
+                    onClick={() => setSelectedClient(client)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="font-bold text-[#F5F0FA] text-base">
+                        {client.nom}
+                      </div>
+                      <span className="font-heading font-black text-amber-400 text-sm">
+                        {formatPrice(client.totalDepense)}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs text-stone-300">
+                      <span className="font-mono text-emerald-400 font-bold">
+                        {client.telephone}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5 text-brand-magenta shrink-0" />
+                        <span>{client.quartierPrincipal}</span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-white/5 flex items-center justify-between gap-2">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-brand-purple/20 text-[#C4B5FD] text-xs font-bold border border-brand-purple/30">
+                        <ShoppingBag className="w-3.5 h-3.5" />
+                        <span>
+                          {client.totalCommandes} commande
+                          {client.totalCommandes > 1 ? "s" : ""}
+                        </span>
+                      </span>
+
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={whatsappUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-500/30 text-emerald-400 flex items-center justify-center transition-colors"
+                          title="Contacter sur WhatsApp"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                        </a>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedClient(client);
+                          }}
+                          className="min-h-[44px] px-3.5 py-2 rounded-xl bg-brand-purple/20 hover:bg-brand-purple text-brand-purple hover:text-white text-xs font-bold transition-all border border-brand-purple/30"
+                        >
+                          Historique
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* Desktop Table View (>= 768px) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-white/10 bg-[#1A1322] text-stone-400 text-[11px] font-bold uppercase tracking-wider">
+                <tr className="border-b border-white/10 bg-[#1A1322] text-stone-400 text-xs font-bold uppercase tracking-wider">
                   <th className="py-4 px-4">Client</th>
                   <th className="py-4 px-4">Téléphone WhatsApp</th>
                   <th className="py-4 px-4">Quartier Principal</th>
@@ -286,9 +361,10 @@ export default function AdminClientsPage() {
 
               <button
                 onClick={() => setSelectedClient(null)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                aria-label="Fermer l'historique client"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 

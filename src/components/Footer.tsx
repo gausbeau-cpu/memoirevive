@@ -33,15 +33,21 @@ export default function Footer() {
             <h4 className="font-bold text-white text-xs uppercase tracking-wider">
               Navigation
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm">
+            <ul className="space-y-0 text-xs sm:text-sm">
               {content.navLinks.map((link) => (
                 <li key={link.href}>
                   {link.href.startsWith("/#") || link.href.startsWith("#") ? (
-                    <a href={link.href} className="hover:text-white transition-colors">
+                    <a
+                      href={link.href}
+                      className="min-h-[44px] flex items-center hover:text-white transition-colors"
+                    >
                       {link.label}
                     </a>
                   ) : (
-                    <Link href={link.href} className="hover:text-white transition-colors">
+                    <Link
+                      href={link.href}
+                      className="min-h-[44px] flex items-center hover:text-white transition-colors"
+                    >
                       {link.label}
                     </Link>
                   )}
@@ -60,9 +66,9 @@ export default function Footer() {
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors"
+                className="min-h-[44px] flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors"
               >
-                <div className="w-5 h-5 rounded-full bg-emerald-950 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-emerald-950 flex items-center justify-center shrink-0">
                   <MessageCircle className="w-3.5 h-3.5" strokeWidth={2} />
                 </div>
                 <span>{content.whatsappLabel}</span>
@@ -77,12 +83,18 @@ export default function Footer() {
         {/* Copyright */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-stone-500 text-xs">
           <p>{content.copyright}</p>
-          <div className="flex flex-wrap items-center justify-center gap-3 text-stone-400">
-            <Link href="/conditions-generales" className="hover:text-stone-200 transition-colors">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-stone-400">
+            <Link
+              href="/conditions-generales"
+              className="min-h-[44px] flex items-center hover:text-stone-200 transition-colors"
+            >
               Conditions Générales
             </Link>
-            <span>·</span>
-            <Link href="/politique-de-confidentialite" className="hover:text-stone-200 transition-colors">
+            <span className="hidden sm:inline text-stone-600">·</span>
+            <Link
+              href="/politique-de-confidentialite"
+              className="min-h-[44px] flex items-center hover:text-stone-200 transition-colors"
+            >
               Politique de Confidentialité
             </Link>
           </div>

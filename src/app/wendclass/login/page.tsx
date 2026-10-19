@@ -103,7 +103,7 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@domaine.bf"
-                  className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-3 pl-10 text-xs sm:text-sm text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 transition-all disabled:opacity-50"
+                  className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-3 pl-10 min-h-[48px] text-base text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 transition-all disabled:opacity-50"
                 />
               </div>
             </div>
@@ -121,7 +121,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-3 pl-10 text-xs sm:text-sm text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 transition-all disabled:opacity-50"
+                  className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-3 pl-10 min-h-[48px] text-base text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 transition-all disabled:opacity-50"
                 />
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading || rateLimitSeconds !== null}
-              className="w-full mt-2 py-3.5 px-5 rounded-xl bg-brand-purple hover:bg-brand-purple-hover text-white text-sm font-bold shadow-[0_0_20px_rgba(124,58,237,0.35)] transition-all hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full mt-2 py-3.5 px-5 min-h-[48px] rounded-xl bg-brand-purple hover:bg-brand-purple-hover text-white text-base font-bold shadow-[0_0_20px_rgba(124,58,237,0.35)] transition-all hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <span>Vérification...</span>
@@ -143,7 +143,7 @@ export default function AdminLoginPage() {
           </form>
 
           {/* Security footnote */}
-          <div className="mt-6 pt-5 border-t border-white/5 flex items-center justify-center gap-1.5 text-[11px] text-stone-400">
+          <div className="mt-6 pt-5 border-t border-white/5 flex items-center justify-center gap-1.5 text-xs text-stone-400">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             <span>Chiffrement bout en bout & Rate limiting actif</span>
           </div>

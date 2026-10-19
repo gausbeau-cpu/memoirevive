@@ -23,7 +23,7 @@ export default function AdminHeader({
       <div className="flex items-center gap-3">
         <button
           onClick={openMobileMenu}
-          className="md:hidden w-9 h-9 rounded-xl bg-[#241B2E] border border-white/10 text-stone-300 flex items-center justify-center hover:text-white"
+          className="md:hidden w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl bg-[#241B2E] border border-white/10 text-stone-300 flex items-center justify-center hover:text-white"
           aria-label="Ouvrir le menu"
         >
           <Menu className="w-5 h-5" />

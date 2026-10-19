@@ -78,7 +78,7 @@ export default async function PublicPreviewPage({ params }: PageProps) {
           <h1 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">
             {content.notFound.title}
           </h1>
-          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+          <p className="text-base text-stone-600 leading-relaxed">
             {content.notFound.message}
           </p>
           <div className="pt-2 space-y-2">
@@ -90,14 +90,14 @@ export default async function PublicPreviewPage({ params }: PageProps) {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full min-h-[44px] py-2.5 px-4 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
+              className="w-full min-h-[48px] py-2.5 px-4 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
             >
               <MessageCircle className="w-4 h-4 text-white" />
               <span>{content.notFound.whatsappButton}</span>
             </LiquidButton>
             <Link
               href="/"
-              className="inline-flex items-center justify-center min-h-[44px] text-xs font-semibold text-brand-purple hover:underline pt-1"
+              className="inline-flex items-center justify-center min-h-[44px] text-xs sm:text-sm font-semibold text-brand-purple hover:underline pt-1"
             >
               {content.notFound.homeButton}
             </Link>
@@ -133,18 +133,18 @@ export default async function PublicPreviewPage({ params }: PageProps) {
             </div>
 
             <div>
-              <span className="inline-block px-3 py-1 rounded-full bg-brand-purple/10 text-brand-purple text-[11px] font-bold uppercase tracking-wider mb-2">
+              <span className="inline-block px-3 py-1 rounded-full bg-brand-purple/10 text-brand-purple text-xs font-bold uppercase tracking-wider mb-2">
                 {content.pending.badge}
               </span>
               <h1 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">
                 {content.pending.title}
               </h1>
-              <p className="text-xs sm:text-sm text-stone-600 mt-2 leading-relaxed">
+              <p className="text-base text-stone-600 mt-2 leading-relaxed">
                 {content.pending.message(data.clientNom, data.forfaitNom)}
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 text-left flex items-start gap-3 text-xs text-amber-900">
+            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 text-left flex items-start gap-3 text-sm text-amber-900">
               <ShieldCheck className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" strokeWidth={2} />
               <p className="leading-snug">
                 {content.pending.notice}
@@ -160,7 +160,7 @@ export default async function PublicPreviewPage({ params }: PageProps) {
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full min-h-[46px] py-3 px-5 rounded-full font-semibold text-xs sm:text-sm flex items-center justify-center gap-2"
+                className="w-full min-h-[48px] py-3 px-5 rounded-full font-semibold text-xs sm:text-sm flex items-center justify-center gap-2"
               >
                 <MessageCircle className="w-4 h-4 text-white" />
                 <span>{content.pending.whatsappButton}</span>
@@ -170,7 +170,7 @@ export default async function PublicPreviewPage({ params }: PageProps) {
         </div>
 
         {/* Pied de page */}
-        <footer className="text-center text-[11px] text-stone-500 py-4">
+        <footer className="text-center text-xs text-stone-500 py-4">
           Mémoire Vive · Tableaux photo personnalisés pour cadeaux d’anniversaire à Ouagadougou 🇧🇫
         </footer>
       </main>
@@ -185,7 +185,7 @@ export default async function PublicPreviewPage({ params }: PageProps) {
         <div className="flex items-center justify-between px-1">
           <Logo size="sm" showTagline={false} />
 
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" strokeWidth={2.5} />
             <span>{content.ready.badge}</span>
           </span>
@@ -202,21 +202,21 @@ export default async function PublicPreviewPage({ params }: PageProps) {
           <h1 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">
             {content.ready.title(data.clientNom)}
           </h1>
-          <p className="text-xs sm:text-sm text-stone-600 max-w-sm mx-auto">
+          <p className="text-base text-stone-600 max-w-sm mx-auto">
             {content.ready.subtitle}
           </p>
         </div>
 
         {/* Carte grand format de l'aperçu */}
         <div className="bg-white rounded-3xl p-3.5 sm:p-5 border border-stone-200 shadow-sm space-y-3.5 transition-all">
-          <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-stone-900 border-2 border-white shadow-md group">
+          <div className="relative aspect-[3/4] max-h-[70svh] w-full rounded-2xl overflow-hidden bg-stone-900 border-2 border-white shadow-md group flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={data.photoApercuUrl}
               alt={`Aperçu tableau pour ${data.clientNom}`}
-              className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-500"
+              className="w-full h-full object-contain animate-in fade-in zoom-in-95 duration-500"
             />
-            <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+            <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-brand-gold" />
               <span>{content.ready.photoBadge}</span>
             </div>
@@ -224,18 +224,18 @@ export default async function PublicPreviewPage({ params }: PageProps) {
 
           {/* Rappel du message personnalisé */}
           {data.texteAEcrire && (
-            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/80 text-xs">
+            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/80 text-sm">
               <p className="font-medium text-stone-700">
                 {content.ready.customTextLabel(data.texteAEcrire)}
               </p>
-              <p className="text-[11px] text-stone-400 mt-0.5">
+              <p className="text-xs text-stone-400 mt-0.5">
                 {content.ready.spellingCheckNotice}
               </p>
             </div>
           )}
 
           {/* Rappel de la garantie */}
-          <div className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/80 flex items-start gap-2.5 text-xs text-amber-950">
+          <div className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/80 flex items-start gap-2.5 text-sm text-amber-950">
             <ShieldCheck className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" strokeWidth={2.5} />
             <p className="leading-snug">
               {content.ready.guaranteeNotice}
@@ -243,8 +243,8 @@ export default async function PublicPreviewPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Boutons d'action WhatsApp */}
-        <div className="space-y-3 pt-1">
+        {/* Boutons d'action WhatsApp avec ancrage collant sur smartphone */}
+        <div className="sticky bottom-0 -mx-4 px-4 sm:mx-0 sm:px-0 py-3 bg-brand-bg/95 backdrop-blur-md border-t border-stone-200/60 sm:border-0 sm:static sm:bg-transparent pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-0 z-20 space-y-2">
           {/* Bouton de validation principal */}
           <LiquidButton
             as="a"
@@ -252,7 +252,7 @@ export default async function PublicPreviewPage({ params }: PageProps) {
             href={whatsappValidateUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full min-h-[54px] py-4 px-6 rounded-full font-bold text-sm sm:text-base shadow-lg shadow-brand-purple/25 flex items-center justify-center gap-2.5"
+            className="w-full min-h-[54px] py-4 px-6 rounded-full font-bold text-base shadow-lg shadow-brand-purple/25 flex items-center justify-center gap-2.5"
           >
             <span>{content.ready.validateButton}</span>
             <ChevronRight className="w-5 h-5 text-white" strokeWidth={2.5} />
@@ -264,9 +264,9 @@ export default async function PublicPreviewPage({ params }: PageProps) {
               href={whatsappRevisionUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 min-h-[44px] text-xs text-stone-500 hover:text-brand-purple transition-colors font-semibold py-2 px-4 rounded-full hover:bg-stone-100"
+              className="inline-flex items-center justify-center gap-1.5 min-h-[44px] text-xs sm:text-sm text-stone-500 hover:text-brand-purple transition-colors font-semibold py-2 px-4 rounded-full hover:bg-stone-100"
             >
-              <HelpCircle className="w-3.5 h-3.5" />
+              <HelpCircle className="w-4 h-4" />
               <span>{content.ready.adjustButton}</span>
             </a>
           </div>
@@ -274,7 +274,7 @@ export default async function PublicPreviewPage({ params }: PageProps) {
       </div>
 
       {/* Pied de page */}
-      <footer className="text-center text-[11px] text-stone-500 py-4">
+      <footer className="text-center text-xs text-stone-500 py-4">
         Mémoire Vive · Tableaux photo personnalisés pour cadeaux d’anniversaire à Ouagadougou 🇧🇫
       </footer>
     </main>

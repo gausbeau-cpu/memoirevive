@@ -41,8 +41,8 @@ export default function HeroShowcase() {
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Conteneur principal ratio 4/5 imposé, arrondi 20px, double ombre douce */}
-      <div className="relative w-full aspect-[4/5] max-w-md rounded-[20px] overflow-hidden shadow-2xl shadow-stone-300/60 border border-stone-200/80 bg-[#F3E8FF] select-none">
+      {/* Conteneur principal ratio 4/5 imposé, arrondi 20px, double ombre douce, max-h 70svh sur mobile */}
+      <div className="relative w-full aspect-[4/5] max-h-[70svh] max-w-md rounded-[20px] overflow-hidden shadow-2xl shadow-stone-300/60 border border-stone-200/80 bg-[#F3E8FF] select-none">
         {/* Grille d'empilement : toutes les images empilées dans la même cellule */}
         <div className="w-full h-full grid grid-cols-1 grid-rows-1">
           {GALLERY_SLOTS.map((slot, idx) => {
@@ -134,7 +134,7 @@ export default function HeroShowcase() {
                           <span className="font-heading text-sm font-bold text-brand-charcoal block">
                             {slot.name}
                           </span>
-                          <span className="text-[11px] font-semibold text-brand-purple bg-brand-purple/10 px-2.5 py-0.5 rounded-full inline-block">
+                          <span className="text-xs font-semibold text-brand-purple bg-brand-purple/10 px-2.5 py-0.5 rounded-full inline-block">
                             Réalisation à venir
                           </span>
                         </div>

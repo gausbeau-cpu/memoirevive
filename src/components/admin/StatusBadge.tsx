@@ -83,8 +83,8 @@ export default function StatusBadge({
   const Icon = config.icon;
 
   const sizeClasses = {
-    sm: "px-2 py-0.5 text-[10px] gap-1",
-    md: "px-2.5 py-1 text-xs gap-1.5",
+    sm: "px-2.5 py-0.5 text-xs gap-1 font-medium",
+    md: "px-2.5 py-1 text-xs gap-1.5 font-medium",
     lg: "px-3.5 py-1.5 text-sm gap-2 font-semibold",
   };
 

@@ -376,7 +376,7 @@ export default function OrderModal({
       className="fixed inset-0 z-50 overflow-y-auto bg-brand-charcoal/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all"
     >
       <div
-        className="bg-brand-bg w-full sm:max-w-xl h-[95dvh] sm:h-auto sm:max-h-[90vh] rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl border border-stone-200 overflow-hidden flex flex-col animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-200"
+        className="bg-brand-bg w-full sm:max-w-xl h-full sm:h-auto sm:max-h-[90vh] rounded-none sm:rounded-2xl shadow-2xl border border-stone-200 overflow-hidden flex flex-col animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
       >
@@ -394,7 +394,7 @@ export default function OrderModal({
                   ? content.success.title
                   : content.title}
               </h2>
-              <span className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1 truncate">
+              <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1 truncate">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" strokeWidth={2} />
                 <span>{content.notice}</span>
               </span>
@@ -633,7 +633,7 @@ export default function OrderModal({
                           <Check className="w-3.5 h-3.5" />
                           <span>{content.photoReady}</span>
                         </span>
-                        <p className="text-[11px] text-stone-500 truncate mt-0.5">
+                        <p className="text-xs text-stone-500 truncate mt-0.5">
                           {photoFile?.name}
                           {photoFile?.size && (
                             <span className="ml-1 text-emerald-700 font-medium">
@@ -672,7 +672,7 @@ export default function OrderModal({
                   <label className="text-xs font-bold text-brand-charcoal uppercase tracking-wider">
                     {content.formatTitle}
                   </label>
-                  <span className="text-[11px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                  <span className="text-xs text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/60">
                     {content.freeDelivery}
                   </span>
                 </div>
@@ -684,7 +684,7 @@ export default function OrderModal({
                       <div
                         key={offer.id}
                         onClick={() => setSelectedFormat(offer.id)}
-                        className={`relative rounded-2xl p-3.5 cursor-pointer border-2 transition-all flex items-center justify-between bg-white ${
+                        className={`relative rounded-2xl p-3.5 min-h-[56px] cursor-pointer border-2 transition-all flex items-center justify-between bg-white ${
                           isSelected
                             ? "border-brand-purple shadow-sm bg-brand-purple/[0.02]"
                             : "border-stone-200 hover:border-stone-300"
@@ -702,23 +702,23 @@ export default function OrderModal({
                           </div>
 
                           <div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                               <span className="font-bold text-sm text-brand-charcoal">
                                 {offer.name} ({offer.format})
                               </span>
                               {offer.badge && (
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-pink/10 text-brand-pink border border-brand-pink/20">
+                                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-brand-pink/10 text-brand-pink border border-brand-pink/20">
                                   {offer.badge}
                                 </span>
                               )}
                             </div>
-                            <p className="text-[11px] text-stone-500 mt-0.5">
+                            <p className="text-xs text-stone-500 mt-0.5">
                               {offer.slogan}
                             </p>
                           </div>
                         </div>
 
-                        <div className="text-right pl-2">
+                        <div className="text-right pl-2 shrink-0">
                           <span className="font-heading font-bold text-base text-brand-purple tabular-nums whitespace-nowrap">
                             {formatOfferPrice(offer.price)}
                           </span>
@@ -737,7 +737,7 @@ export default function OrderModal({
                   </label>
                   {!laisserProposerTexte && (
                     <span
-                      className={`text-[11px] font-semibold tabular-nums ${
+                      className={`text-xs font-semibold tabular-nums ${
                         texteAEcrire.length > 90
                           ? "text-rose-600"
                           : "text-stone-400"
@@ -755,7 +755,7 @@ export default function OrderModal({
                       key={sug}
                       type="button"
                       onClick={() => handleSuggestionClick(sug)}
-                      className="text-xs px-3 py-1.5 min-h-[36px] rounded-full bg-stone-100 hover:bg-brand-purple/10 active:bg-brand-purple/20 text-stone-700 hover:text-brand-purple transition-colors border border-stone-200/80 cursor-pointer flex items-center"
+                      className="text-xs px-3 py-1.5 min-h-[38px] rounded-full bg-stone-100 hover:bg-brand-purple/10 active:bg-brand-purple/20 text-stone-700 hover:text-brand-purple transition-colors border border-stone-200/80 cursor-pointer flex items-center"
                     >
                       « {sug} »
                     </button>
@@ -771,12 +771,13 @@ export default function OrderModal({
                     setTexteAEcrire(e.target.value);
                     setValidationError(null);
                   }}
+                  enterKeyHint="next"
                   placeholder={
                     laisserProposerTexte
                       ? "On te proposera des idées touchantes par WhatsApp ✨"
                       : content.messagePlaceholder
                   }
-                  className={`w-full px-3.5 py-3 rounded-xl border text-sm transition focus:outline-none focus:ring-2 focus:ring-brand-purple/30 ${
+                  className={`w-full min-h-[48px] px-3.5 py-3 rounded-xl border text-base transition focus:outline-none focus:ring-2 focus:ring-brand-purple/30 ${
                     laisserProposerTexte
                       ? "bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed"
                       : "bg-white text-brand-charcoal border-stone-300 focus:border-brand-purple"
@@ -839,13 +840,16 @@ export default function OrderModal({
                   </label>
                   <input
                     type="text"
+                    autoComplete="name"
+                    autoCapitalize="words"
+                    enterKeyHint="next"
                     value={nom}
                     onChange={(e) => {
                       setNom(e.target.value);
                       setValidationError(null);
                     }}
                     placeholder={content.contact.namePlaceholder}
-                    className="w-full px-3.5 py-3 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
+                    className="w-full min-h-[48px] px-3.5 py-3 rounded-xl border border-stone-300 text-base focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
                   />
                 </div>
 
@@ -855,13 +859,16 @@ export default function OrderModal({
                   </label>
                   <input
                     type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    enterKeyHint="next"
                     value={telephone}
                     onChange={(e) => {
                       setTelephone(e.target.value);
                       setValidationError(null);
                     }}
                     placeholder={content.contact.phonePlaceholder}
-                    className="w-full px-3.5 py-3 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
+                    className="w-full min-h-[48px] px-3.5 py-3 rounded-xl border border-stone-300 text-base focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
                   />
                 </div>
 
@@ -871,13 +878,15 @@ export default function OrderModal({
                   </label>
                   <input
                     type="text"
+                    autoComplete="address-level2"
+                    enterKeyHint={showLandmark ? "next" : "done"}
                     value={quartier}
                     onChange={(e) => {
                       setQuartier(e.target.value);
                       setValidationError(null);
                     }}
                     placeholder={content.contact.neighborhoodPlaceholder}
-                    className="w-full px-3.5 py-3 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
+                    className="w-full min-h-[48px] px-3.5 py-3 rounded-xl border border-stone-300 text-base focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white"
                   />
 
                   {/* Chips de sélection rapide des quartiers */}
@@ -887,7 +896,7 @@ export default function OrderModal({
                         key={q}
                         type="button"
                         onClick={() => handleNeighborhoodClick(q)}
-                        className={`text-xs px-3 py-1.5 min-h-[34px] rounded-full border transition cursor-pointer flex items-center ${
+                        className={`text-xs px-3 py-1.5 min-h-[38px] rounded-full border transition cursor-pointer flex items-center ${
                           quartier === q
                             ? "bg-brand-purple text-white border-brand-purple font-bold shadow-xs"
                             : "bg-white text-stone-600 border-stone-200 hover:border-stone-300"
@@ -904,7 +913,7 @@ export default function OrderModal({
                   <button
                     type="button"
                     onClick={() => setShowLandmark(!showLandmark)}
-                    className="min-h-[36px] py-1 text-xs font-semibold text-brand-purple flex items-center gap-1 hover:underline cursor-pointer"
+                    className="min-h-[40px] py-1 text-xs font-semibold text-brand-purple flex items-center gap-1 hover:underline cursor-pointer"
                   >
                     <span>{content.contact.landmarkToggle}</span>
                     {showLandmark ? (
@@ -917,17 +926,19 @@ export default function OrderModal({
                   {showLandmark && (
                     <input
                       type="text"
+                      autoComplete="address-line2"
+                      enterKeyHint="done"
                       value={adresseDetails}
                       onChange={(e) => setAdresseDetails(e.target.value)}
                       placeholder={content.contact.landmarkPlaceholder}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white mt-1.5 animate-in fade-in"
+                      className="w-full min-h-[48px] px-3.5 py-2.5 rounded-xl border border-stone-300 text-base focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple bg-white mt-1.5 animate-in fade-in"
                     />
                   )}
                 </div>
               </div>
 
               {/* 6. BOUTON D'ACTION ET RÉASSURANCE */}
-              <div className="-mx-4 px-4 sm:-mx-6 sm:px-6 pt-3 sticky bottom-0 bg-brand-bg/95 backdrop-blur-md pb-5 sm:pb-3 border-t border-stone-200/40 -mb-4 sm:-mb-6">
+              <div className="-mx-4 px-4 sm:-mx-6 sm:px-6 pt-3 sticky bottom-0 bg-white/95 backdrop-blur-md pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-3 border-t border-stone-200/80 -mb-4 sm:-mb-6 shadow-sm z-20">
                 {serverError && (
                   <div className="mb-2.5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5 animate-in fade-in">
                     <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
@@ -948,8 +959,8 @@ export default function OrderModal({
                   <ArrowRight className="w-5 h-5 text-white" />
                 </LiquidButton>
 
-                <div className="flex items-center justify-center gap-3 text-[11px] text-stone-500 font-medium text-center mt-2.5">
-                  <span className="flex items-center gap-1 text-emerald-700">
+                <div className="flex items-center justify-center gap-3 text-xs text-stone-500 font-medium text-center mt-2.5">
+                  <span className="flex items-center gap-1 text-emerald-700 font-semibold">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                     <span>0 FCFA maintenant</span>
                   </span>

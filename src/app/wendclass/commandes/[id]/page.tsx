@@ -246,9 +246,9 @@ export default function OrderDetailPage() {
         actions={
           <Link
             href="/wendclass/commandes"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#241B2E] border border-purple-500/20 text-xs font-semibold text-stone-300 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 px-3.5 min-h-[44px] rounded-xl bg-[#241B2E] border border-purple-500/20 text-xs sm:text-sm font-semibold text-stone-300 hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-4 h-4" />
             <span>Retour aux commandes</span>
           </Link>
         }
@@ -280,7 +280,7 @@ export default function OrderDetailPage() {
             <a
               href={`/api/wendclass/commandes/${order.id}/download?type=originale`}
               download
-              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#150F1B] border border-white/10 hover:border-purple-500/30 text-stone-300 hover:text-white text-xs font-semibold transition-colors"
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-xl bg-[#150F1B] border border-white/10 hover:border-purple-500/30 text-stone-300 hover:text-white text-xs font-semibold transition-colors"
               title="Télécharger la photo originale client sur ton ordinateur"
             >
               <Download className="w-3.5 h-3.5" />
@@ -293,7 +293,7 @@ export default function OrderDetailPage() {
                 href={whatsappSendPreviewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-purple to-brand-purple-hover text-white font-bold text-xs shadow-glow-purple transition-all hover:scale-105"
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-xl bg-gradient-to-r from-brand-purple to-brand-purple-hover text-white font-bold text-xs shadow-glow-purple transition-all hover:scale-105"
               >
                 <MessageCircle className="w-4 h-4 text-emerald-300" />
                 <span>Envoyer l'aperçu par WhatsApp</span>
@@ -305,7 +305,7 @@ export default function OrderDetailPage() {
               href={whatsappGeneralUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all hover:scale-105"
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all hover:scale-105"
             >
               <MessageCircle className="w-3.5 h-3.5" />
               <span>WhatsApp Client</span>
@@ -594,18 +594,18 @@ export default function OrderDetailPage() {
                         ? `Fichier sélectionné : ${previewFile.name}`
                         : "Cliquez pour choisir le fichier HD retouché"}
                     </p>
-                    <p className="text-[11px] text-stone-400 mt-0.5">
+                    <p className="text-xs text-stone-400 mt-0.5">
                       JPG, PNG, WebP (Portrait retouché avec message intégré)
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     <input
                       type="url"
                       value={previewUrlInput}
                       onChange={(e) => setPreviewUrlInput(e.target.value)}
                       placeholder="Ou collez directement une URL d'image (ex: Unsplash / Cloudinary)..."
-                      className="flex-1 bg-[#150F1B] border border-purple-500/20 rounded-xl px-3 py-2 text-xs text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple"
+                      className="flex-1 bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-2.5 min-h-[48px] text-base text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple"
                     />
                     <button
                       type="submit"
@@ -613,9 +613,9 @@ export default function OrderDetailPage() {
                         uploadingPreview ||
                         (!previewFile && !previewUrlInput.trim())
                       }
-                      className="px-4 py-2 rounded-xl bg-brand-purple hover:bg-brand-purple-hover text-white text-xs font-bold shadow-sm transition-all disabled:opacity-40 flex items-center gap-1.5 shrink-0"
+                      className="px-4 py-2.5 min-h-[48px] rounded-xl bg-brand-purple hover:bg-brand-purple-hover text-white text-xs font-bold shadow-sm transition-all disabled:opacity-40 flex items-center justify-center gap-1.5 shrink-0"
                     >
-                      <Save className="w-3.5 h-3.5" />
+                      <Save className="w-4 h-4" />
                       <span>{uploadingPreview ? "Envoi..." : "Enregistrer"}</span>
                     </button>
                   </div>
@@ -647,14 +647,14 @@ export default function OrderDetailPage() {
                       type="button"
                       disabled={updatingStatus}
                       onClick={() => handleStatusUpdate(st.id)}
-                      className={`p-2.5 rounded-xl border text-left text-xs font-bold flex items-center gap-2 transition-all ${
+                      className={`min-h-[48px] p-2.5 rounded-xl border text-left text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
                         isCurrent
                           ? "bg-brand-purple text-white border-brand-purple shadow-[0_0_15px_rgba(124,58,237,0.4)]"
                           : "bg-[#150F1B] border-white/10 hover:border-purple-500/30 text-stone-300 hover:text-white"
                       }`}
                     >
                       <Icon
-                        className={`w-3.5 h-3.5 ${
+                        className={`w-4 h-4 shrink-0 ${
                           isCurrent ? "text-white" : st.color
                         }`}
                       />
@@ -666,7 +666,7 @@ export default function OrderDetailPage() {
 
               {/* Optional Comment for Timeline */}
               <div className="pt-2">
-                <label className="block text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">
                   Note d'historique <span className="text-stone-600">(optionnel)</span>
                 </label>
                 <input
@@ -674,7 +674,7 @@ export default function OrderDetailPage() {
                   value={statusComment}
                   onChange={(e) => setStatusComment(e.target.value)}
                   placeholder="Ex: Validation accord client par téléphone..."
-                  className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-3 py-2 text-xs text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple"
+                  className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-2.5 min-h-[48px] text-base text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple"
                 />
               </div>
             </div>
@@ -766,7 +766,7 @@ export default function OrderDetailPage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <StatusBadge statut={h.nouveauStatut} size="sm" />
-                        <span className="text-[10px] text-stone-400 font-mono">
+                        <span className="text-xs text-stone-400 font-mono">
                           {new Date(h.date).toLocaleDateString("fr-FR", {
                             day: "numeric",
                             month: "short",
@@ -797,8 +797,8 @@ export default function OrderDetailPage() {
         >
           <button
             onClick={() => setLightboxImage(null)}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
-            aria-label="Fermer"
+            className="absolute top-4 right-4 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+            aria-label="Fermer l'image"
           >
             <X className="w-5 h-5" />
           </button>

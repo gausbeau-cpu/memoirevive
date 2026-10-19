@@ -6,7 +6,7 @@ export default function GuaranteeSection() {
   const content = SITE_CONTENT.guarantee;
 
   return (
-    <section className="py-14 sm:py-20 bg-[#EC4899] text-white relative">
+    <section className="py-12 md:py-20 bg-[#EC4899] text-white relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10">
           {/* Écusson de garantie */}
@@ -23,11 +23,11 @@ export default function GuaranteeSection() {
               <span>{content.badge}</span>
             </div>
 
-            <h3 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight">
+            <h3 className="font-heading text-fluid-h2 font-bold text-white leading-tight">
               {content.title}
             </h3>
 
-            <p className="text-sm sm:text-base text-white/95 leading-relaxed font-normal">
+            <p className="text-base text-white/95 leading-relaxed font-normal">
               {content.body}
             </p>
 

@@ -114,7 +114,7 @@ export default function AdminDashboardPage() {
             <div className="bg-[#150F1B] p-4 rounded-2xl border border-white/5 flex items-center justify-between">
               <div>
                 <span className="text-xs font-bold text-stone-300 block">Petit · 30 x 40 cm</span>
-                <span className="text-[11px] text-stone-500">12 000 FCFA</span>
+                <span className="text-xs text-stone-400">12 000 FCFA</span>
               </div>
               <span className="text-2xl font-bold font-heading text-[#A78BFA]">
                 {statsData?.formatCounts?.format_30x40 ?? 0}
@@ -125,9 +125,9 @@ export default function AdminDashboardPage() {
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-bold text-white block">Coup de cœur · 40 x 60 cm</span>
-                  <span className="text-[9px] bg-brand-magenta/20 text-brand-magenta font-bold px-1.5 py-0.5 rounded">Vedette</span>
+                  <span className="text-xs bg-brand-magenta/20 text-brand-magenta font-bold px-1.5 py-0.5 rounded">Vedette</span>
                 </div>
-                <span className="text-[11px] text-amber-400">20 000 FCFA</span>
+                <span className="text-xs text-amber-400">20 000 FCFA</span>
               </div>
               <span className="text-2xl font-bold font-heading text-brand-magenta">
                 {statsData?.formatCounts?.format_40x60 ?? 0}
@@ -137,7 +137,7 @@ export default function AdminDashboardPage() {
             <div className="bg-[#150F1B] p-4 rounded-2xl border border-amber-500/20 flex items-center justify-between">
               <div>
                 <span className="text-xs font-bold text-stone-300 block">Grand · 50 x 70 cm</span>
-                <span className="text-[11px] text-amber-400">30 000 FCFA</span>
+                <span className="text-xs text-amber-400">30 000 FCFA</span>
               </div>
               <span className="text-2xl font-bold font-heading text-amber-400">
                 {statsData?.formatCounts?.format_50x70 ?? 0}
@@ -285,10 +285,74 @@ export default function AdminDashboardPage() {
             </Link>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Mobile Cards View (< 768px) */}
+          <div className="block md:hidden space-y-3">
+            {statsData?.recentOrders?.map((order: AdminOrder) => (
+              <div
+                key={order.id}
+                className="bg-[#150F1B] p-4 rounded-2xl border border-white/5 space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs text-stone-400 font-bold">
+                    {order.id}
+                  </span>
+                  <StatusBadge statut={order.statut} size="sm" />
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="font-semibold text-[#F5F0FA] text-sm">
+                      {order.clientNom}
+                    </div>
+                    <div className="text-xs text-stone-400 mt-0.5">
+                      {order.clientTelephone} · {order.clientQuartier}
+                    </div>
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <span className="font-bold text-[#A78BFA] text-xs block">
+                      {order.forfaitNom}
+                    </span>
+                    <span className="text-xs text-stone-400">
+                      {order.forfaitFormat}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-white/5 flex items-center justify-between gap-2">
+                  <div>
+                    {order.echeance === "cette_semaine" ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                        ⚡ Cette semaine
+                      </span>
+                    ) : order.echeance === "ce_mois" ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/5 text-stone-300 border border-white/10">
+                        Ce mois
+                      </span>
+                    ) : (
+                      <span className="text-xs text-stone-500">
+                        {order.echeance === "plus_tard" ? "Plus tard" : "—"}
+                      </span>
+                    )}
+                  </div>
+
+                  <Link
+                    href={`/wendclass/commandes/${order.id}`}
+                    className="min-h-[44px] px-4 py-2 rounded-xl bg-brand-purple/20 hover:bg-brand-purple text-brand-purple hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all border border-brand-purple/30"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>Ouvrir</span>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Table View (>= 768px) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-stone-400 text-[11px] font-bold uppercase tracking-wider">
+                <tr className="border-b border-white/10 text-stone-400 text-xs font-bold uppercase tracking-wider">
                   <th className="pb-3 px-3">Réf</th>
                   <th className="pb-3 px-3">Client</th>
                   <th className="pb-3 px-3">Format</th>
@@ -309,7 +373,7 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="py-3.5 px-3 font-semibold text-[#F5F0FA]">
                       <div>{order.clientNom}</div>
-                      <div className="text-[11px] text-stone-400 font-normal">
+                      <div className="text-xs text-stone-400 font-normal">
                         {order.clientTelephone}
                       </div>
                     </td>
@@ -317,21 +381,21 @@ export default function AdminDashboardPage() {
                       <span className="font-bold text-[#A78BFA]">
                         {order.forfaitNom}
                       </span>
-                      <span className="block text-[11px] text-stone-400">
+                      <span className="block text-xs text-stone-400">
                         {order.forfaitFormat}
                       </span>
                     </td>
                     <td className="py-3.5 px-3">
                       {order.echeance === "cette_semaine" ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
                           ⚡ Cette semaine
                         </span>
                       ) : order.echeance === "ce_mois" ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/5 text-stone-300 border border-white/10">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/5 text-stone-300 border border-white/10">
                           Ce mois
                         </span>
                       ) : (
-                        <span className="text-[10px] text-stone-500">
+                        <span className="text-xs text-stone-500">
                           {order.echeance === "plus_tard" ? "Plus tard" : "—"}
                         </span>
                       )}

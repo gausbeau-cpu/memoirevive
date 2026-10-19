@@ -33,6 +33,19 @@ const config: Config = {
         heading: ["var(--font-fraunces)", "serif"],
         sans: ["var(--font-plus-jakarta)", "sans-serif"],
       },
+      fontSize: {
+        "fluid-h1": ["clamp(1.625rem, 6.6vw, 3.5rem)", { lineHeight: "1.15" }],
+        "fluid-h2": ["clamp(1.5rem, 5.2vw, 2.5rem)", { lineHeight: "1.2" }],
+        "fluid-h3": ["clamp(1.25rem, 4.2vw, 1.75rem)", { lineHeight: "1.25" }],
+        "fluid-price": ["clamp(1.75rem, 6vw, 2.5rem)", { lineHeight: "1.1" }],
+        "fluid-body": ["1rem", { lineHeight: "1.6" }],
+        "fluid-secondary": ["0.875rem", { lineHeight: "1.5" }],
+        "fluid-caption": ["0.75rem", { lineHeight: "1.4" }],
+        "fluid-button": ["1rem", { lineHeight: "1.2", fontWeight: "600" }],
+      },
+      maxWidth: {
+        site: "1200px",
+      },
       boxShadow: {
         "glow-purple": "0 10px 25px -5px rgba(124, 58, 237, 0.35), 0 8px 10px -6px rgba(124, 58, 237, 0.2)",
         "glow-magenta": "0 10px 25px -5px rgba(236, 72, 153, 0.35), 0 8px 10px -6px rgba(236, 72, 153, 0.2)",

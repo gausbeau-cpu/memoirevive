@@ -107,7 +107,7 @@ export default function AdminOrdersListPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Rechercher nom, téléphone (+226...), quartier, réf..."
-                className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-2.5 pl-10 text-xs sm:text-sm text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+                className="w-full bg-[#150F1B] border border-purple-500/20 rounded-xl px-4 py-3 pl-10 min-h-[48px] text-base text-[#F5F0FA] placeholder:text-stone-600 focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
               />
             </form>
 
@@ -129,7 +129,7 @@ export default function AdminOrdersListPage() {
                 <button
                   key={f.id}
                   onClick={() => setStatusFilter(f.id)}
-                  className={`shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  className={`shrink-0 px-3.5 py-2 min-h-[38px] flex items-center rounded-xl text-xs font-semibold transition-all ${
                     isActive
                       ? "bg-brand-purple text-white shadow-[0_0_12px_rgba(124,58,237,0.4)]"
                       : "bg-[#150F1B] text-stone-400 hover:text-white border border-white/5 hover:border-purple-500/20"
@@ -144,10 +144,110 @@ export default function AdminOrdersListPage() {
 
         {/* Orders Table */}
         <div className="bg-[#241B2E] rounded-3xl border border-purple-500/15 shadow-[0_4px_25px_rgba(0,0,0,0.3)] overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Mobile Cards View (< 768px) */}
+          <div className="block md:hidden divide-y divide-white/5">
+            {paginatedOrders.length === 0 ? (
+              <div className="py-12 text-center text-stone-400 text-sm">
+                Aucune commande ne correspond aux filtres sélectionnés.
+              </div>
+            ) : (
+              paginatedOrders.map((order) => {
+                const waPhone = formatBurkinaWhatsAppPhone(order.clientTelephone);
+                return (
+                  <div key={order.id} className="p-4 space-y-3 bg-[#241B2E]">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-bold text-stone-300">
+                          {order.id}
+                        </span>
+                        <span className="text-xs text-stone-500">·</span>
+                        <span className="text-xs text-stone-400">
+                          {new Date(order.createdAt).toLocaleDateString("fr-FR", {
+                            day: "numeric",
+                            month: "short",
+                          })}
+                        </span>
+                      </div>
+                      <StatusBadge statut={order.statut} size="sm" />
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="relative w-12 h-14 rounded-xl overflow-hidden bg-stone-900 border border-white/10 shrink-0">
+                        {order.photoOriginaleUrl ? (
+                          <img
+                            src={order.photoOriginaleUrl}
+                            alt="Photo"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-stone-600">
+                            <ImageIcon className="w-4 h-4" />
+                          </div>
+                        )}
+                        {order.photoApercuUrl && (
+                          <div
+                            title="Aperçu prêt"
+                            className="absolute bottom-0 inset-x-0 bg-brand-purple text-xs font-bold text-center text-white py-0.5"
+                          >
+                            HD
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-[#F5F0FA] text-sm">
+                          {order.clientNom}
+                        </div>
+                        <div className="text-xs text-stone-400 mt-0.5">
+                          {order.clientQuartier}
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="font-bold text-[#A78BFA] text-xs">
+                            {order.forfaitFormat} · {order.forfaitNom}
+                          </span>
+                          <span className="text-xs font-semibold text-amber-400">
+                            {formatPrice(order.forfaitPrix)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {order.texteAEcrire && (
+                      <div className="text-stone-300 text-xs italic bg-[#150F1B] p-2.5 rounded-xl border border-white/5">
+                        « {order.texteAEcrire} »
+                      </div>
+                    )}
+
+                    <div className="pt-2 border-t border-white/5 flex items-center justify-between gap-2">
+                      <a
+                        href={`https://wa.me/${waPhone}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="min-h-[44px] px-3.5 py-2 rounded-xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>WhatsApp</span>
+                      </a>
+
+                      <Link
+                        href={`/wendclass/commandes/${order.id}`}
+                        className="min-h-[44px] px-4 py-2 rounded-xl bg-brand-purple hover:bg-brand-purple-hover text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+                      >
+                        <Eye className="w-4 h-4" />
+                        <span>Gérer</span>
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* Desktop Table View (>= 768px) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-white/10 bg-[#1A1322] text-stone-400 text-[11px] font-bold uppercase tracking-wider">
+                <tr className="border-b border-white/10 bg-[#1A1322] text-stone-400 text-xs font-bold uppercase tracking-wider">
                   <th className="py-4 px-4">Date</th>
                   <th className="py-4 px-4">Photo & Réf</th>
                   <th className="py-4 px-4">Client</th>
@@ -202,7 +302,7 @@ export default function AdminOrdersListPage() {
                               {order.photoApercuUrl && (
                                 <div
                                   title="Aperçu prêt"
-                                  className="absolute bottom-0 inset-x-0 bg-brand-purple text-[8px] font-bold text-center text-white py-0.5"
+                                  className="absolute bottom-0 inset-x-0 bg-brand-purple text-xs font-bold text-center text-white py-0.5"
                                 >
                                   HD
                                 </div>
@@ -233,7 +333,7 @@ export default function AdminOrdersListPage() {
                               <span>{order.clientTelephone}</span>
                             </a>
                           </div>
-                          <div className="text-[11px] text-stone-400 mt-0.5">
+                          <div className="text-xs text-stone-400 mt-0.5">
                             {order.clientQuartier}
                           </div>
                         </td>
@@ -245,7 +345,7 @@ export default function AdminOrdersListPage() {
                           <span className="text-xs text-stone-300 block">
                             {order.forfaitNom}
                           </span>
-                          <span className="text-[11px] font-semibold text-amber-400">
+                          <span className="text-xs font-semibold text-amber-400">
                             {formatPrice(order.forfaitPrix)}
                           </span>
                         </td>
@@ -259,7 +359,7 @@ export default function AdminOrdersListPage() {
                               « {order.texteAEcrire} »
                             </div>
                           ) : order.laisserProposerTexte ? (
-                            <span className="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                            <span className="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">
                               Proposer un texte
                             </span>
                           ) : (
@@ -267,7 +367,7 @@ export default function AdminOrdersListPage() {
                           )}
                           {order.occasionNote && (
                             <div
-                              className="text-[11px] text-stone-400 truncate mt-1"
+                              className="text-xs text-stone-400 truncate mt-1"
                               title={order.occasionNote}
                             >
                               Note : {order.occasionNote}
@@ -277,11 +377,11 @@ export default function AdminOrdersListPage() {
 
                         <td className="py-4 px-4 whitespace-nowrap">
                           {order.echeance === "cette_semaine" ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
                               ⚡ Cette semaine
                             </span>
                           ) : order.echeance === "ce_mois" ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-white/5 text-stone-300 border border-white/10">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/5 text-stone-300 border border-white/10">
                               Ce mois
                             </span>
                           ) : (

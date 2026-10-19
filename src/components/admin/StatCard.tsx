@@ -84,7 +84,7 @@ export default function StatCard({
       {(subtitle || trend) && (
         <div className="mt-3 pt-2.5 border-t border-white/5 flex items-center justify-between text-xs">
           {subtitle && (
-            <span className="text-stone-400 text-[11px] truncate">
+            <span className="text-stone-400 text-xs truncate">
               {subtitle}
             </span>
           )}

@@ -25,24 +25,49 @@
   }
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: clip;
+}
+
 body {
   color: var(--color-charcoal);
   background-color: var(--color-bg);
   font-family: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
   position: relative;
+  min-width: 0;
+}
+
+/* ========================================================================= */
+/* Principes Mobile-First & Typographie fluide (Sections 2 & 3)              */
+/* ========================================================================= */
+p, span, li, a, label, button, input, textarea, select {
+  overflow-wrap: anywhere;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* Champs de formulaire : 16px minimum pour empêcher le zoom forcé sur iOS */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  font-size: 16px;
 }
 
 /* Texture de grain photo subtile (papier photo chic argentique, opacité 0.035) */
 body::before {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 9999;
   opacity: 0.035;
@@ -56,6 +81,54 @@ body::before {
 /* Smooth tap transitions */
 button, a {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Utilitaires Safe Area & Unités d'écran dvh/svh (Section 2.4 & 2.5) */
+.min-h-screen-dvh {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.h-screen-dvh {
+  height: 100vh;
+  height: 100dvh;
+}
+.h-screen-svh {
+  height: 100vh;
+  height: 100svh;
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Cibles tactiles minimum 44x44px (Section 3) */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Conteneur standard du site (max 1200px centré avec padding fluide) */
+.site-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) {
+  .site-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .site-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 /* Scrollbar chaleureuse */

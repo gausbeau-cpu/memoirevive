@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Check } from "lucide-react";
 
-export const LIQUID_ACTION_DELAY_MS = 2100;
+export const LIQUID_ACTION_DELAY_MS = 1680;
 
 export type LiquidButtonVariant = "primary" | "secondary" | "whatsapp";
 
@@ -136,25 +136,25 @@ export default function LiquidButton({
       const id = ++dropIdRef.current;
       setDrops((prev) => [...prev, { id, x, y, diameter, fading: false }]);
 
-      // Transition couleur texte variante secondaire à mi-remplissage (2x plus long : 1500 ms)
+      // Transition couleur texte variante secondaire à mi-remplissage (1200 ms)
       if (variant === "secondary") {
-        setTimeout(() => setIsTextWhiteSecondary(true), 1500);
+        setTimeout(() => setIsTextWhiteSecondary(true), 1200);
       }
 
-      // Reste plein 900 ms puis commence le fondu (3900ms + 900ms = 4800ms)
+      // Reste plein puis commence le fondu (3120ms + 720ms = 3840ms)
       setTimeout(() => {
         setDrops((prev) =>
           prev.map((d) => (d.id === id ? { ...d, fading: true } : d))
         );
-      }, 4800);
+      }, 3840);
 
-      // Suppression de l'élément du DOM après le fondu (4800ms + 1800ms = 6600ms)
+      // Suppression de l'élément du DOM après le fondu (3840ms + 1440ms = 5280ms)
       setTimeout(() => {
         setDrops((prev) => prev.filter((d) => d.id !== id));
         if (variant === "secondary") {
           setIsTextWhiteSecondary(false);
         }
-      }, 6600);
+      }, 5280);
     },
     [isReducedMotion, isGauge, variant]
   );

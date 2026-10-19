@@ -303,7 +303,7 @@ button, a {
 }
 
 .liquid-blob-expand {
-  animation: liquidExpand 1950ms cubic-bezier(.22,1,.36,1) forwards;
+  animation: liquidExpand 3900ms cubic-bezier(.22,1,.36,1) forwards;
   will-change: transform;
 }
 

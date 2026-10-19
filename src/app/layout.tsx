@@ -32,6 +32,19 @@ export const metadata: Metadata = {
     "photo anniversaire Burkina Faso",
     "tirage tableau PVC Ouaga",
   ],
+  icons: {
+    icon: [
+      { url: "/brand/memoire-vive-icon.png", sizes: "192x192", type: "image/png" },
+      { url: "/brand/memoire-vive-icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/memoire-vive-icon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/brand/memoire-vive-favicon.webp", type: "image/webp" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: ["/favicon.ico"],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   openGraph: {
     title: "Mémoire Vive — Tableaux photo personnalisés pour cadeaux d’anniversaire",
     description:
@@ -49,6 +62,12 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${fraunces.variable} ${plusJakarta.variable}`}>
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/brand/memoire-vive-icon-32.png" type="image/png" sizes="32x32" />
+        <link rel="icon" href="/brand/memoire-vive-icon-16.png" type="image/png" sizes="16x16" />
+        <link rel="icon" href="/brand/memoire-vive-icon.png" type="image/png" sizes="192x192" />
+        <link rel="icon" href="/brand/memoire-vive-favicon.webp" type="image/webp" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
         <script
           dangerouslySetInnerHTML={{
             __html: "document.documentElement.classList.add('js');",

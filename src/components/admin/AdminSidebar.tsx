@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
@@ -60,8 +61,14 @@ export default function AdminSidebar({
       {/* Brand Header */}
       <div className="p-5 border-b border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-purple to-brand-magenta flex items-center justify-center text-white shadow-[0_0_15px_rgba(124,58,237,0.4)]">
-            <Sparkles className="w-4 h-4 text-brand-gold" strokeWidth={2} />
+          <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.4)] bg-brand-purple">
+            <Image
+              src="/brand/memoire-vive-icon.webp"
+              alt="Mémoire Vive"
+              width={36}
+              height={36}
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <h1 className="font-heading font-bold text-base text-[#F5F0FA] tracking-tight leading-tight">

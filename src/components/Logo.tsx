@@ -19,40 +19,41 @@ export default function Logo({
   variant = "default",
   onDark = false,
   href = "/",
+  monogramOnly = false,
 }: LogoProps) {
   const isDark = variant === "on-dark" || onDark;
 
-  // Tailles imposées par la spécification :
+  // Tailles :
   // Desktop : hauteur 40 px, Mobile : hauteur 34 px
-  // Ratio 808/197 conservé scrupuleusement, jamais étiré
+  // Ratio 1025/239 conservé scrupuleusement, jamais étiré
   const imgSizes = {
     sm: "h-[28px] sm:h-[32px] w-auto",
     md: "h-[34px] sm:h-[40px] w-auto",
     lg: "h-[40px] sm:h-[48px] w-auto",
   };
 
-  const logoImage = (
+  const logoSrc = isDark
+    ? "/brand/memoire-vive-logo-white.webp"
+    : "/brand/memoire-vive-logo.webp";
+
+  const content = monogramOnly ? (
     <Image
-      src="/brand/memoire-vive-logo.webp"
+      src="/brand/memoire-vive-icon.webp"
       alt="Mémoire Vive"
-      width={808}
-      height={197}
+      width={260}
+      height={239}
+      priority
+      className="h-[34px] sm:h-[40px] w-auto object-contain select-none"
+    />
+  ) : (
+    <Image
+      src={logoSrc}
+      alt="Mémoire Vive"
+      width={1025}
+      height={239}
       priority
       className={`${imgSizes[size]} object-contain select-none`}
     />
-  );
-
-  // Marge de protection autour du logo égale à la moitié de sa hauteur
-  // et zone cliquable minimale de 44 px de haut
-  const content = isDark ? (
-    <div
-      className="inline-flex items-center justify-center p-2 rounded-[12px] bg-[#FFFBF7] shadow-sm select-none"
-      style={{ borderRadius: "12px", backgroundColor: "#FFFBF7", padding: "8px" }}
-    >
-      {logoImage}
-    </div>
-  ) : (
-    logoImage
   );
 
   const containerClasses = `min-h-[44px] py-1 px-4 sm:px-5 inline-flex items-center justify-center transition-opacity hover:opacity-95 ${className}`;

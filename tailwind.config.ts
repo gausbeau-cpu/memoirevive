@@ -34,7 +34,7 @@ const config: Config = {
         sans: ["var(--font-plus-jakarta)", "sans-serif"],
       },
       fontSize: {
-        "fluid-h1": ["clamp(1.625rem, 6.6vw, 3.5rem)", { lineHeight: "1.15" }],
+        "fluid-h1": ["clamp(3.25rem, 13vw, 7rem)", { lineHeight: "1.08" }],
         "fluid-h2": ["clamp(1.5rem, 5.2vw, 2.5rem)", { lineHeight: "1.2" }],
         "fluid-h3": ["clamp(1.25rem, 4.2vw, 1.75rem)", { lineHeight: "1.25" }],
         "fluid-price": ["clamp(1.75rem, 6vw, 2.5rem)", { lineHeight: "1.1" }],

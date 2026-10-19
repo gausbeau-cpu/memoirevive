@@ -44,7 +44,7 @@ export default function HeroHeadline({ className = "" }: HeroHeadlineProps) {
   return (
     <h1
       ref={containerRef}
-      className={`font-heading font-bold text-brand-charcoal tracking-tight text-[clamp(1.625rem,6.6vw,3.5rem)] leading-[1.15] overflow-visible ${className}`}
+      className={`font-heading font-bold text-brand-charcoal tracking-tight text-[clamp(3.25rem,13vw,7rem)] leading-[1.08] overflow-visible ${className}`}
     >
       {/* 4.1 Texte complet masqué visuellement pour SEO et lecteurs d'écran */}
       <span className="sr-only">

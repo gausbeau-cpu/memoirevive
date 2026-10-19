@@ -30,7 +30,7 @@ Les tailles de police critiques utilisent des fonctions fluides `clamp()` config
 
 | Rôle | Token Tailwind | Taille fluide | Interlignage |
 |---|---|---|---|
-| Titre Hero (H1) | `text-hero` | `clamp(1.625rem, 6.6vw, 3.5rem)` | 1.15 |
+| Titre Hero (H1) | `text-hero` | `clamp(3.25rem, 13vw, 7rem)` | 1.08 |
 | Titre de section (H2) | `text-section` | `clamp(1.5rem, 5.2vw, 2.5rem)` | 1.2 |
 | Sous-titre de carte (H3) | `text-card` | `clamp(1.25rem, 4.2vw, 1.75rem)` | 1.25 |
 | Prix | `text-price` | `clamp(1.75rem, 6vw, 2.5rem)`, tabulaire | 1.1 |
